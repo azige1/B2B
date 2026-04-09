@@ -18,7 +18,7 @@ import os
 import re
 import glob
 
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPORTS_DIR  = os.path.join(PROJECT_ROOT, 'reports')
 
 sep = '=' * 80

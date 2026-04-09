@@ -1,7 +1,7 @@
 """analyze_phase2_timing.py — 从历史日志分析Phase2单epoch耗时（供Phase5实验估时）"""
 import os, glob, csv
 
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 print("="*65)
 print("  Phase 2/4 历史实验耗时分析")

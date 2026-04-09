@@ -255,7 +255,7 @@ def run_preflight():
         ("训练入口", os.path.join(PROJECT_ROOT, "src", "train", "run_training_v2.py")),
         ("评估入口", os.path.join(PROJECT_ROOT, "evaluate.py")),
         ("聚合评估", os.path.join(PROJECT_ROOT, "evaluate_agg.py")),
-        ("自检脚本", os.path.join(PROJECT_ROOT, "check_phase5_code.py")),
+        ("自检脚本", os.path.join(PROJECT_ROOT, "scripts", "diagnostic", "check_phase5_code.py")),
         ("V3 train dyn", os.path.join(PROJECT_ROOT, "data", "processed_v3", "X_train_dyn.bin")),
         ("V3 val dyn", os.path.join(PROJECT_ROOT, "data", "processed_v3", "X_val_dyn.bin")),
         ("V3 meta", os.path.join(PROJECT_ROOT, "data", "artifacts_v3", "meta_v2.json")),

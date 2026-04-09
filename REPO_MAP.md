@@ -85,10 +85,10 @@ B2B_Replenishment_System/
 ├── scripts/runners/phase5/run_phase5_experiments.py          ← ★ Phase 5 挂机Runner
 ├── run_training_weekly.py             ← 周频训练（已放弃）
 ├── run_weekly_experiments.py          ← 周频实验Runner（已放弃）
-├── check_phase5_code.py              ← Phase 5 代码检查
-├── analyze_daily_vs_weekly.py        ← 日频vs周频对比分析
-├── analyze_phase2_timing.py          ← Phase 2 耗时分析
-├── analyze_phase4_results.py         ← Phase 4 结果分析
+├── scripts/diagnostic/check_phase5_code.py     ← Phase 5 代码检查
+├── scripts/analysis/analyze_daily_vs_weekly.py ← 日频vs周频对比分析
+├── scripts/analysis/analyze_phase2_timing.py   ← Phase 2 耗时分析
+├── scripts/analysis/analyze_phase4_results.py  ← Phase 4 结果分析
 │
 ├── AGENTS.md                          ← ★ Codex 执行手册
 ├── TRAINING_FLOW.md                   ← ★ 训练主链路

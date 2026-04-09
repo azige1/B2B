@@ -50,7 +50,7 @@ EXP_VERSION=v5 python evaluate.py
 
 ### 3.3 仓库健康检查 (代码检查点)
 ```bash
-python check_phase5_code.py
+python scripts/diagnostic/check_phase5_code.py
 ```
 
 ---
