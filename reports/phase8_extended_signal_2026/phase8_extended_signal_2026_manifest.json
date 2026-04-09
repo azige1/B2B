@@ -1,0 +1,18 @@
+{
+  "status": "analysis_only",
+  "date_range": {
+    "order_min": "2026-01-23",
+    "order_max": "2026-03-26"
+  },
+  "rows": 28719,
+  "outputs": {
+    "summary": "reports/phase8_extended_signal_2026/phase8_extended_signal_2026_summary.md",
+    "base": "reports/phase8_extended_signal_2026/phase8_extended_signal_2026_base.csv",
+    "month_table": "reports/phase8_extended_signal_2026/phase8_extended_signal_2026_month_table.csv",
+    "event_bucket_table": "reports/phase8_extended_signal_2026/phase8_extended_signal_2026_event_bucket_table.csv",
+    "preorder_table": "reports/phase8_extended_signal_2026/phase8_extended_signal_2026_preorder_table.csv",
+    "inventory_table": "reports/phase8_extended_signal_2026/phase8_extended_signal_2026_inventory_table.csv",
+    "joint_signal_table": "reports/phase8_extended_signal_2026/phase8_extended_signal_2026_joint_signal_table.csv",
+    "focus_cases": "reports/phase8_extended_signal_2026/phase8_extended_signal_2026_focus_cases.csv"
+  }
+}

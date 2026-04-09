@@ -1,0 +1,49 @@
+{
+  "base_candidate_key": "p57_covact_lr005_l63_hard_g025",
+  "selected_rule": "ld080_q3",
+  "delivery_ready": false,
+  "summary": [
+    {
+      "rule_name": "ld085_q3",
+      "anchor_passes": 2,
+      "global_ratio": 0.9788644888945454,
+      "global_wmape": 0.8152222689045292,
+      "4_25_sku_p50": 0.5930537737279107,
+      "4_25_wmape_like": 0.4789466784698043,
+      "ice_4_25_sku_p50": 0.49461076307722274,
+      "1_3_ratio": 1.2717038479977965,
+      "blockbuster_sku_p50": 0.4149336227362215,
+      "auc": 0.9551696529059313,
+      "f1": 0.7558363709424608,
+      "delivery_ready": false
+    },
+    {
+      "rule_name": "ld080_q3",
+      "anchor_passes": 2,
+      "global_ratio": 0.9568638225257425,
+      "global_wmape": 0.8017137742265155,
+      "4_25_sku_p50": 0.5891679160688726,
+      "4_25_wmape_like": 0.4816708718215046,
+      "ice_4_25_sku_p50": 0.48358170698158254,
+      "1_3_ratio": 1.2257252260960687,
+      "blockbuster_sku_p50": 0.4149336227362215,
+      "auc": 0.9551696529059313,
+      "f1": 0.7558363709424608,
+      "delivery_ready": false
+    },
+    {
+      "rule_name": "ld085_q4",
+      "anchor_passes": 2,
+      "global_ratio": 0.9623923678542711,
+      "global_wmape": 0.8112736382660342,
+      "4_25_sku_p50": 0.5693381550027188,
+      "4_25_wmape_like": 0.4907788264294961,
+      "ice_4_25_sku_p50": 0.48085764050597724,
+      "1_3_ratio": 1.2386939187954353,
+      "blockbuster_sku_p50": 0.4149336227362215,
+      "auc": 0.9551696529059313,
+      "f1": 0.7558363709424608,
+      "delivery_ready": false
+    }
+  ]
+}

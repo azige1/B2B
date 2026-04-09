@@ -1,0 +1,38 @@
+{
+  "phase": "phase7",
+  "status": "current_official",
+  "mainline_candidate": "tail_full_lr005_l63_g027_n800_s2028 + sep098_oct093",
+  "feature_family": "v6_event",
+  "feature_set": "cov_activity_tail_full",
+  "gold_wide_table": "data/gold/wide_table_sku.csv",
+  "gold_universe_note": "cleaned gold; SKUs missing from data/silver/clean_products.csv are excluded from the current official universe",
+  "official_reports": {
+    "mainline_json": "reports/current/current_mainline.json",
+    "freeze_summary": "reports/current/current_freeze_summary.md",
+    "model_compare_html": "reports/current/current_model_compare.html",
+    "model_compare_csv": "reports/current/current_model_compare.csv",
+    "model_compare_summary": "reports/current/current_model_compare_summary.md"
+  },
+  "current_feature_assets": {
+    "processed": [
+      "data/processed_v5_lite_p7b_20250901_v5_lite",
+      "data/processed_v5_lite_p7b_20251001_v5_lite",
+      "data/processed_v5_lite_p7b_20251101_v5_lite",
+      "data/processed_v5_lite_p7b_20251201_v5_lite",
+      "data/processed_v6_event_p7b_20250901_v6_event",
+      "data/processed_v6_event_p7b_20251001_v6_event",
+      "data/processed_v6_event_p7b_20251101_v6_event",
+      "data/processed_v6_event_p7b_20251201_v6_event"
+    ],
+    "artifacts": [
+      "data/artifacts_v5_lite_p7b_20250901_v5_lite",
+      "data/artifacts_v5_lite_p7b_20251001_v5_lite",
+      "data/artifacts_v5_lite_p7b_20251101_v5_lite",
+      "data/artifacts_v5_lite_p7b_20251201_v5_lite",
+      "data/artifacts_v6_event_p7b_20250901_v6_event",
+      "data/artifacts_v6_event_p7b_20251001_v6_event",
+      "data/artifacts_v6_event_p7b_20251101_v6_event",
+      "data/artifacts_v6_event_p7b_20251201_v6_event"
+    ]
+  }
+}

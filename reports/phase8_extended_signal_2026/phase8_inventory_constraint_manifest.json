@@ -1,0 +1,7 @@
+{
+  "status": "analysis_only",
+  "summary": "reports/phase8_extended_signal_2026/phase8_inventory_constraint_summary.md",
+  "zero_true_table": "reports/phase8_extended_signal_2026/phase8_inventory_constraint_zero_true_table.csv",
+  "positive_true_table": "reports/phase8_extended_signal_2026/phase8_inventory_constraint_positive_true_table.csv",
+  "candidate_cases": "reports/phase8_extended_signal_2026/phase8_inventory_constraint_candidate_cases.csv"
+}

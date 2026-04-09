@@ -1,0 +1,76 @@
+{
+  "current_mainline": "sep098_oct093",
+  "stagea": {
+    "syntax_ok": true,
+    "imports": {
+      "catboost": true,
+      "xgboost": true
+    },
+    "backend_smoke": {
+      "catboost": {
+        "ok": true,
+        "error": ""
+      },
+      "xgboost": {
+        "ok": true,
+        "error": ""
+      }
+    }
+  },
+  "force_stage_c_backends": [
+    "xgboost"
+  ],
+  "force_stage_d_backends": [
+    "xgboost"
+  ],
+  "smoke_gate_passed_backends": [],
+  "stage_c_backends": [
+    "xgboost"
+  ],
+  "raw_gate_passed_backends": [],
+  "stage_d_backends": [
+    "xgboost"
+  ],
+  "raw_summary": [
+    {
+      "candidate_key": "lightgbm_raw_g025",
+      "backend": "lightgbm",
+      "stage_name": "raw_4anchor_compare",
+      "global_ratio": 1.0448664880009537,
+      "global_wmape": 0.8593063563846063,
+      "4_25_under_wape": 0.41301968123679655,
+      "4_25_sku_p50": 0.6123325585164634,
+      "ice_4_25_sku_p50": 0.5185664621082704,
+      "blockbuster_under_wape": 0.5405212436469121,
+      "blockbuster_sku_p50": 0.4149336227362215,
+      "top20_true_volume_capture": 0.6213059722144356,
+      "rank_corr_positive_skus": 0.7365244419144066,
+      "raw_stage_pass": true,
+      "forced_to_stage_d": false,
+      "advance_to_stage_d": true
+    },
+    {
+      "candidate_key": "xgboost_raw_g025",
+      "backend": "xgboost",
+      "stage_name": "raw_4anchor_compare",
+      "global_ratio": 1.1147893805366507,
+      "global_wmape": 0.9411303664620475,
+      "4_25_under_wape": 0.42047523404397347,
+      "4_25_sku_p50": 0.6083736595486111,
+      "ice_4_25_sku_p50": 0.5121344180971005,
+      "blockbuster_under_wape": 0.5440067902166119,
+      "blockbuster_sku_p50": 0.39413047896113407,
+      "top20_true_volume_capture": 0.6171577018560246,
+      "rank_corr_positive_skus": 0.7165516466975113,
+      "raw_stage_pass": false,
+      "forced_to_stage_d": true,
+      "advance_to_stage_d": true
+    }
+  ],
+  "generated_files": {
+    "stagea_json": "E:\\LSTM\\B2B\\B2B_Replenishment_System\\reports\\phase6f_tree_family_compare\\phase6f_stagea_smoke.json",
+    "smoke_table": "E:\\LSTM\\B2B\\B2B_Replenishment_System\\reports\\phase6f_tree_family_compare\\phase6f_single_anchor_smoke_table.csv",
+    "raw_anchor_table": "E:\\LSTM\\B2B\\B2B_Replenishment_System\\reports\\phase6f_tree_family_compare\\phase6f_raw_anchor_table.csv",
+    "calibrated_anchor_table": "E:\\LSTM\\B2B\\B2B_Replenishment_System\\reports\\phase6f_tree_family_compare\\phase6f_calibrated_anchor_table.csv"
+  }
+}

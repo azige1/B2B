@@ -1,0 +1,75 @@
+# ========================
+#   全局配置 (Global)
+# ========================
+project_name: "B2B_Replenishment_V2"
+seed: 42
+device: "cuda"
+
+# ========================
+#   数据路径 (Data Paths)
+# ========================
+paths:
+  raw_dir: "data/raw"
+  silver_dir: "data/silver"
+  gold_dir: "data/gold"
+  dataset_dir: "data/processed_v3"
+  output_dir: "models_v2"
+
+# ========================
+#   数据特征 (Features)
+# ========================
+data:
+  lookback_days: 90
+  forecast_days: 30
+  
+  dynamic_cols:
+    - "qty_replenish"
+    - "roll_repl_7"
+    - "roll_repl_30"
+    - "qty_debt"
+    - "qty_shipped"
+    - "roll_ship_7"
+    - "qty_inbound"
+
+  static_cat_cols:
+    - "sku_id"
+    - "style_id"
+    - "product_name"
+    - "category"
+    - "sub_category"
+    - "season"
+    - "series"
+    - "band"
+    - "size_id"
+    - "color_id"
+    - "month"
+
+  static_num_cols:
+    - "qty_first_order"
+    - "price_tag"
+
+# ========================
+#   模型参数 (Model)
+# ========================
+model:
+  hidden_size: 256
+  num_layers: 2
+  dropout: 0.3
+  embedding_dim: 16       # 静态特征 Embedding 维度基准（自适应公式会覆盖单列）
+  
+  task_weights:
+    cls: 1.0
+    reg: 1.0
+  
+  embedding_dims: {}
+
+# ========================
+#   训练参数 (Training)
+# ========================
+train:
+  batch_size: 1536
+  learning_rate: 0.0002
+  epochs: 20
+  val_every: 1
+  val_subset_ratio: 1
+  early_stopping_patience: 5

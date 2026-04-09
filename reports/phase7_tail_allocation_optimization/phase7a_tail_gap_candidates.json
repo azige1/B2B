@@ -1,0 +1,51 @@
+{
+  "phase": "phase7a_tail_gap_pack",
+  "baseline_mainline": "p57_covact_lr005_l63_hard_g025 + sep098_oct093",
+  "recommended_variants": [
+    {
+      "variant_key": "qfo_plus",
+      "problem_target": "repl0_fut0 + ice + 高首单量的 tail 漏补",
+      "signal_source": "qty_first_order bucket, cold-start blockbuster under, signal_quadrant mismatch",
+      "why_now": "当前 blockbuster 最大漏补集中在弱动态信号但首单量很大的冷启动 SKU，上游证据最强。",
+      "expected_metric_targets": [
+        "blockbuster_under_wape",
+        "blockbuster_sku_p50",
+        "ice_4_25_sku_p50"
+      ]
+    },
+    {
+      "variant_key": "tail_peak",
+      "problem_target": ">25 尾部事件记忆不足",
+      "signal_source": "blockbuster under, high-qty tail miss, top20 missed SKU concentration",
+      "why_now": "当前模型对高需求 SKU 的 tail 放大量不足，需要补历史高量事件与极值记忆。",
+      "expected_metric_targets": [
+        "blockbuster_under_wape",
+        "blockbuster_sku_p50",
+        "top20_true_volume_capture"
+      ]
+    },
+    {
+      "variant_key": "style_category_priors",
+      "problem_target": "category/style 级 tail under",
+      "signal_source": "blockbuster category/sub_category under summary",
+      "why_now": "tail under 已经表现出明显的品类和款式聚类，适合引入历史强度先验。",
+      "expected_metric_targets": [
+        "blockbuster_under_wape",
+        "blockbuster_sku_p50",
+        "rank_corr_positive_skus"
+      ]
+    },
+    {
+      "variant_key": "tail_full",
+      "problem_target": "同时补 tail 与 allocation",
+      "signal_source": "qfo, category priors, buyer concentration, top20 miss",
+      "why_now": "当前 phase7 目标是同时改善 tail 和 allocation，最终候选必须验证组合方案。",
+      "expected_metric_targets": [
+        "blockbuster_under_wape",
+        "blockbuster_sku_p50",
+        "top20_true_volume_capture",
+        "rank_corr_positive_skus"
+      ]
+    }
+  ]
+}

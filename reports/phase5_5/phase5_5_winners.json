@@ -1,0 +1,25 @@
+{
+  "baseline_sequence": "p527_lstm_l3_v5_lite_s2027",
+  "main_line": "p531_tree_hard_core",
+  "anchor_wins": {
+    "p531_tree_hard_core": 1,
+    "p535_tree_hard_cov_activity": 1
+  },
+  "anchor_records": [
+    {
+      "anchor_date": "2025-11-01",
+      "winner_base_exp": "p531_tree_hard_core",
+      "winner_exp_id": "p55_20251101_p531_tree_hard_core_s2026"
+    },
+    {
+      "anchor_date": "2025-12-01",
+      "winner_base_exp": "p535_tree_hard_cov_activity",
+      "winner_exp_id": "p55_20251201_p535_tree_hard_cov_activity_s2026"
+    }
+  ],
+  "event_tree_candidates": [
+    "p535_tree_hard_cov_activity",
+    "p531_tree_hard_core"
+  ],
+  "decision": "needs_more_validation"
+}

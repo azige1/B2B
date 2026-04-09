@@ -1,0 +1,17 @@
+{
+  "syntax_ok": true,
+  "imports": {
+    "catboost": true,
+    "xgboost": true
+  },
+  "backend_smoke": {
+    "catboost": {
+      "ok": true,
+      "error": ""
+    },
+    "xgboost": {
+      "ok": true,
+      "error": ""
+    }
+  }
+}

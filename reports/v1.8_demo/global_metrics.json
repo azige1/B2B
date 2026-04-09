@@ -1,0 +1,13 @@
+{
+  "run_time": "20260316_180004",
+  "model_version": "V1.8",
+  "prob_threshold": 0.45,
+  "scale_factor": 0.5,
+  "global_mae": 0.0673,
+  "global_ratio": 0.4419,
+  "sum_true_qty": 367209,
+  "sum_pred_qty": 162272,
+  "sku_count": 10097,
+  "sku_global_mae": 50.19,
+  "sku_global_rmse": 446.66
+}

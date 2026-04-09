@@ -1,0 +1,39 @@
+{
+  "status": "analysis_only_shadow",
+  "anchors": [
+    "2026-02-15",
+    "2026-02-24"
+  ],
+  "base_summary": {
+    "candidate_key": "base_tail_full",
+    "track": "cov_activity_tail_full",
+    "global_ratio": 1.0946142746924208,
+    "global_wmape": 0.8613946416696059,
+    "4_25_under_wape": 0.43835585784694575,
+    "4_25_sku_p50": 0.5966248000000001,
+    "ice_4_25_sku_p50": 0.523429821314297,
+    "blockbuster_under_wape": 0.4933707124659208,
+    "blockbuster_sku_p50": 0.4735065941954637,
+    "top20_true_volume_capture": 0.560585080221655,
+    "rank_corr_positive_skus": 0.6917921458116834,
+    "1_3_ratio": 1.142078002644658
+  },
+  "shadow_summary": {
+    "candidate_key": "event_inventory_plus",
+    "track": "cov_activity_tail_full_event",
+    "global_ratio": 1.0475581640683245,
+    "global_wmape": 0.6666886355774791,
+    "4_25_under_wape": 0.34517421069310295,
+    "4_25_sku_p50": 0.6817986436363637,
+    "ice_4_25_sku_p50": 0.6212426318791412,
+    "blockbuster_under_wape": 0.3773179962348413,
+    "blockbuster_sku_p50": 0.6326187876182489,
+    "top20_true_volume_capture": 0.5766464141930367,
+    "rank_corr_positive_skus": 0.7522024328695021,
+    "1_3_ratio": 1.0749342681401628
+  },
+  "outputs": {
+    "anchor_table": "reports\\phase8_event_inventory_shadow_2026\\phase8_event_inventory_shadow_anchor_table.csv",
+    "summary_md": "reports\\phase8_event_inventory_shadow_2026\\phase8_event_inventory_shadow_summary.md"
+  }
+}

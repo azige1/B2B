@@ -1,0 +1,42 @@
+{
+  "phase": "phase7",
+  "status": "frozen",
+  "winner_action": "promote_phase7_candidate",
+  "mainline_candidate": "tail_full_lr005_l63_g027_n800_s2028 + sep098_oct093",
+  "raw_model": "tail_full_lr005_l63_g027_n800_s2028",
+  "calibration_rule": "sep098_oct093",
+  "feature_set": "cov_activity_tail_full",
+  "tree_family": "lightgbm",
+  "previous_mainline": "p57_covact_lr005_l63_hard_g025 + sep098_oct093",
+  "anchor_passes": 4,
+  "key_metrics": {
+    "4_25_under_wape": 0.3566,
+    "4_25_sku_p50": 0.6588,
+    "ice_4_25_sku_p50": 0.5853,
+    "blockbuster_under_wape": 0.4165,
+    "blockbuster_sku_p50": 0.5539,
+    "top20_true_volume_capture": 0.6494,
+    "rank_corr_positive_skus": 0.8044,
+    "global_ratio": 1.0159,
+    "global_wmape": 0.6863,
+    "1_3_ratio": 1.2999
+  },
+  "phase6_baseline_metrics": {
+    "4_25_under_wape": 0.4236,
+    "4_25_sku_p50": 0.5986,
+    "ice_4_25_sku_p50": 0.5069,
+    "blockbuster_under_wape": 0.5507,
+    "blockbuster_sku_p50": 0.4048,
+    "top20_true_volume_capture": 0.6213,
+    "rank_corr_positive_skus": 0.7365,
+    "global_ratio": 1.0188,
+    "global_wmape": 0.8526,
+    "1_3_ratio": 1.3801
+  },
+  "evidence_files": [
+    "reports/phase7_tail_allocation_optimization/overnight_20260402_overnight/overnight_summary.md",
+    "reports/phase7_tail_allocation_optimization/overnight_20260402_overnight/overnight_winner.json",
+    "reports/phase7h_december_readable_report/dec_20251201_dashboard.html",
+    "reports/phase7h_december_readable_report/dec_20251201_static_feature_audit.md"
+  ]
+}

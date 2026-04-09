@@ -1,0 +1,17 @@
+{
+  "baseline_sequence": "p527_lstm_l3_v5_lite_s2027",
+  "main_line": "p535_tree_hard_cov_activity",
+  "event_tree_candidates": [
+    "p535_tree_hard_cov_activity",
+    "p531_tree_hard_core"
+  ],
+  "sequence_keep": [
+    "p527_lstm_l3_v5_lite_s2027"
+  ],
+  "promote_phase54": [
+    "p535_tree_hard_cov_activity",
+    "p531_tree_hard_core",
+    "p527_lstm_l3_v5_lite_s2027"
+  ],
+  "decision": "shift_to_event_tree"
+}

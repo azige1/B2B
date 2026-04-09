@@ -1,0 +1,31 @@
+{
+  "phase": "phase6",
+  "status": "frozen",
+  "mainline_candidate": "p57_covact_lr005_l63_hard_g025 + sep098_oct093",
+  "raw_model": "p57_covact_lr005_l63_hard_g025",
+  "calibration_rule": "sep098_oct093",
+  "tree_family": "lightgbm",
+  "sequence_backup": "p527_lstm_l3_v5_lite_s2027",
+  "confirmed_tree_reference": "p535_tree_hard_cov_activity",
+  "backup_tree_reference": "p531_tree_hard_core",
+  "anchor_passes": 4,
+  "key_metrics": {
+    "4_25_under_wape": 0.4236,
+    "4_25_sku_p50": 0.5986,
+    "ice_4_25_sku_p50": 0.5069,
+    "blockbuster_under_wape": 0.5507,
+    "blockbuster_sku_p50": 0.4048,
+    "top20_true_volume_capture": 0.6213,
+    "rank_corr_positive_skus": 0.7365,
+    "global_ratio": 1.0188,
+    "global_wmape": 0.8526,
+    "1_3_ratio": 1.3801
+  },
+  "evidence_files": [
+    "reports/phase6e_tree_validation_pack/phase6e_tree_validation_pack_summary.md",
+    "reports/phase6f_tree_family_compare/phase6f_tree_family_compare_summary.md",
+    "reports/phase6h_december_readable_report/dec_20251201_dashboard.html",
+    "reports/phase6h_december_readable_report/dec_20251201_static_feature_audit.md"
+  ],
+  "phase7_entry": "phase7_tail_allocation_optimization"
+}

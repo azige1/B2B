@@ -1,0 +1,103 @@
+# ========================
+#   Oracle 数据库配置
+# ========================
+database:
+  user: "IRSRead"
+  password: "IrS_REaD$2025"
+  dsn: "47.104.90.96:1521/RFZS"
+  # ⚠️ 必须指向您服务器上真实的 Instant Client 路径
+  lib_dir: "/root/instantclient_19_8"
+
+# ========================
+#   路径配置 (Paths) - 🟢 修正点在此
+# ========================
+paths:
+  raw_dir: "./data/raw"           # 1. 原始数据 (下载)
+  silver_dir: "./data/silver"     # 2. 清洗数据 (去重/填0)
+  gold_dir: "./data/gold"         # 3. 宽表数据 (特征工程输入)
+  dataset_dir: "./data/processed_fast"  # 4. 训练张量 (模型输入) - 与 model_config.yaml 保持一致
+  output_dir: "./outputs"         # 5. 预测结果
+  events_source: "./data_warehouse/fact_events/V_IRS_EVENT.csv"
+  events_processed: "./data/silver/clean_events.csv"
+
+# ========================
+#   同步策略配置 (全量 10 表)
+# ========================
+tables:
+  # --- A. 核心维度 (全量更新) ---
+  product_info:
+    table_name: "BOSNDS3.V_IRS_PRODUCT"
+    strategy: "full"
+    description: "商品基础信息(款色/SKU)"
+    columns:
+      m_dim1: "brand"
+      name: "skc"
+      no: "sku"
+      value: "product_name"
+      pricelist: "price_tag"
+      m_dim5: "category_main"
+      m_dim6: "category_sub"
+      m_dim8: "season"
+
+  product_ext:
+    table_name: "BOSNDS3.V_IRS_PRO_DATA"
+    strategy: "full"
+    description: "商品扩展属性"
+
+  store_info:
+    table_name: "BOSNDS3.V_IRS_STORE"
+    strategy: "full"
+    description: "门店基础信息"
+    columns:
+      name: "store_name"
+
+  customer_profile:
+    table_name: "BOSNDS3.V_IRS_CUS_PROFILE"
+    strategy: "full"
+    description: "客户/买手画像"
+
+  # --- B. 核心流水 (增量更新) ---
+  order_info:
+    table_name: "BOSNDS3.V_IRS_ORDER"
+    strategy: "incremental"
+    time_col: "modifieddate"
+    days_back: 5
+    description: "现货订单流水"
+    columns:
+      storename: "store_name"
+      no: "sku"
+      qtyspo: "qty_replenish_spot"
+      qtyso: "qty_preorder"
+      modifieddate: "order_date"
+
+  presale_order:
+    table_name: "BOSNDS3.V_IRS_PREORDER"
+    strategy: "incremental"
+    time_col: "modifieddate"
+    days_back: 5
+    description: "预售订单流水"
+    columns:
+      qtyspo: "qty_presale"
+
+  user_event:
+    table_name: "BOSNDS3.V_IRS_EVENT"
+    strategy: "incremental"
+    time_col: "Creationdate"
+    days_back: 5
+    description: "用户埋点"
+    columns:
+      name: "store_name"
+      productname: "skc"
+      car_qty: "cart_qty"
+      creationdate: "event_time"
+
+  # --- C. 库存约束 (全量快照) ---
+  inventory_spot:
+    table_name: "BOSNDS3.V_IRS_STORAGE"
+    strategy: "full"
+    description: "大仓现货库存"
+
+  inventory_presale:
+    table_name: "BOSNDS3.V_IRS_B2BSTORAGE"
+    strategy: "full"
+    description: "B2B预售库存"

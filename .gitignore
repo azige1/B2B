@@ -1,0 +1,62 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Python cache / local env
+__pycache__/
+*.py[cod]
+*.pyo
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+
+# Local logs and temp files
+*.log
+*.tmp
+*.temp
+
+# Local vendored runtime dependencies
+.vendor_tree_backends/
+
+# Model artifacts
+models/
+models_phase8_event_shadow/
+models_phase8_event_inventory_shadow_2026/
+*.pth
+
+# Base data layers and generated feature assets
+data/raw/
+data/silver/*.csv
+data/gold/*.csv
+data/processed_*/
+data/artifacts_*/
+data/phase8a_prep/*.csv
+
+# Warehouse extracts and snapshots
+data_warehouse/**/*.csv
+data_warehouse/**/*.parquet
+data_warehouse/__MACOSX/
+
+# Generated report exports
+reports/**/*.csv
+reports/**/*.html
+reports/**/*.xlsx
+reports/**/*.png
+reports/**/*.txt
+reports/eval_history/
+reports/eval_report_*.txt
+reports/**/eval_report_*.txt
+reports/**/eval_*.txt
+reports/**/agg_*.txt
+reports/**/eval_meta_*.json
+reports/model_selection_*.json
+
+# Notebook or analysis outputs that should stay local unless explicitly curated
+diagnostics/**/*.csv
+diagnostics/**/*.html
