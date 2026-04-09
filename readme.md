@@ -1,55 +1,78 @@
-﻿# B2B Replenishment System
+# B2B Replenishment System
 
-B2B 鏈嶈琛ヨ揣棰勬祴椤圭洰銆傚綋鍓嶄粨搴撳凡缁忎粠鏃╂湡鐨?LSTM 涓荤嚎锛屾紨杩涘埌浠ユ爲妯″瀷涓烘寮忎富绾跨殑鐮旂┒涓庝氦浠樺伐浣滃尯銆?
-## 褰撳墠鐘舵€?
-- 褰撳墠瀹樻柟闃舵锛歚phase7`
-- 褰撳墠瀹樻柟鐘舵€侊細`frozen`
-- 褰撳墠瀹樻柟涓荤嚎锛歚tail_full_lr005_l63_g027_n800_s2028 + sep098_oct093`
-- 褰撳墠瀹樻柟鏍戞ā鍨嬪鏃忥細`LightGBM`
-- 褰撳墠 phase8 鏂瑰悜锛歚event + inventory`锛屼絾浠嶅浜?shadow / exploratory 闃舵
+服装 B2B 补货预测研究与交付工作区。
 
-褰撳墠姝ｅ紡鍏ュ彛浼樺厛鐪嬶細
+## Current Status
 
-- `PROJECT_INDEX.md`
-- `reports/current/current_mainline.json`
-- `reports/current/current_freeze_summary.md`
-- `reports/current/current_model_compare_summary.md`
-- `reports/current/phase8_direction_note.md`
+- 当前官方阶段: `phase7`
+- 当前官方状态: `frozen`
+- 当前官方主线: `tail_full_lr005_l63_g027_n800_s2028 + sep098_oct093`
+- 当前官方树模型家族: `LightGBM`
+- 当前 `phase8` 工作方向: `event + inventory`
+- 当前 `phase8` 最优探索基线: `event_inventory_zero_split`
 
-## 浠撳簱缁撴瀯
+当前仓库已经不是早期的 LSTM 主线仓库。LSTM 相关内容主要保留为历史实验与对照参考，当前官方主线是树模型。
+
+## Start Here
+
+如果只想快速了解当前状态，按这个顺序看：
+
+1. `DOCS_INDEX.md`
+2. `PROJECT_INDEX.md`
+3. `reports/current/current_mainline.json`
+4. `reports/current/current_freeze_summary.md`
+5. `reports/current/phase8_restart_playbook_20260409.md`
+6. `RUNNERS_INDEX.md`
+
+## Repository Layout
 
 ```text
 B2B_Replenishment_System/
-鈹溾攢鈹€ src/                 # 鏍稿績浠ｇ爜锛欵TL銆佺壒寰併€佽缁冦€佽瘎浼般€佹帹鐞嗐€佸垎鏋?鈹溾攢鈹€ config/              # 妯″瀷涓庢暟鎹厤缃?鈹溾攢鈹€ docs/                # 椤圭洰璇存槑涓庡伐浣滆鑼?鈹溾攢鈹€ reports/             # 褰撳墠缁撹銆侀樁娈垫€荤粨銆佸巻鍙插疄楠岀粨璁?鈹溾攢鈹€ scripts/             # 璇婃柇鑴氭湰涓庡巻鍙?runner
-鈹溾攢鈹€ data/                # 鏁版嵁璧勪骇绱㈠紩涓庢湰鍦板疄楠岃祫浜ф槧灏?鈹溾攢鈹€ data_warehouse/      # 鍘熷鎶藉彇涓庡揩鐓ф暟鎹紙榛樿涓嶇撼鍏?Git锛?鈹斺攢鈹€ models/              # 鏈湴妯″瀷浜х墿锛堥粯璁や笉绾冲叆 Git锛?```
+├── src/                    # 核心代码: etl / features / train / analysis / inference
+├── scripts/
+│   ├── runners/            # phase5 ~ phase8 runner
+│   ├── analysis/           # 历史分析辅助脚本
+│   ├── diagnostic/         # 仓库与实验自检脚本
+│   └── eval/               # 辅助评估脚本
+├── reports/                # 当前结论、阶段报告、历史实验报告
+├── data/                   # 当前数据资产映射与本地处理产物
+├── data_warehouse/         # 原始抽取与快照数据
+├── models/                 # 当前官方模型资产
+├── config/                 # 配置文件
+└── docs/                   # 其他说明文档
+```
 
-## 甯哥敤鍏ュ彛
-
-褰撳墠椤圭洰鏇村亸鈥滈樁娈?runner + 鎶ュ憡褰掓。鈥濈殑宸ヤ綔鏂瑰紡锛屽父鐢ㄥ叆鍙ｅ寘鎷細
+## Common Entry Points
 
 ```bash
-# 鏌ョ湅褰撳墠瀹樻柟鐘舵€?
+# 刷新当前官方 freeze 摘要
 python scripts/runners/phase7/run_phase7_freeze.py
 
-# 鐢熸垚褰撳墠瀹樻柟 December compare
+# 刷新当前官方 compare 页面
 python scripts/runners/phase7/run_phase7i_full_model_compare.py
 
-# phase8 鍑嗗鍒嗘瀽
+# 运行 phase8 准备分析
 python scripts/runners/phase8/run_phase8a_prep.py
 
-# phase8 搴撳瓨绾︽潫鍒嗘瀽
+# 运行 phase8 库存约束分析
 python scripts/runners/phase8/run_phase8f_inventory_constraint_pack.py
 
-# 浠撳簱鍗敓妫€鏌?
+# 仓库卫生检查
 python scripts/diagnostic/check_git_hygiene.py
 ```
 
-濡傛灉鏄槄璇昏€屼笉鏄噸璺戯紝浼樺厛鐩存帴鐪?`reports/current/`銆?
-## 鏁版嵁涓庣増鏈鐞?
-- Git 涓昏璺熻釜婧愮爜銆侀厤缃€佸叧閿枃妗ｃ€侀樁娈电粨璁恒€?- 鍘熷鏁版嵁銆佸鐞嗕骇鐗┿€佹ā鍨嬫潈閲嶃€佸鍑哄瀷鎶ヨ〃榛樿涓嶇撼鍏ョ増鏈簱銆?- Git 瑙勫垯瑙?`docs/GIT_WORKFLOW.md`銆?
-## 褰撳墠宸ヤ綔閲嶇偣
+如果只是阅读当前结论，优先直接看 `reports/current/`，不要先从历史 phase 报告开始。
 
-- 淇濇寔 `phase7` 瀹樻柟涓荤嚎绋冲畾鍙拷婧?- 鍩轰簬 `event + inventory` 鍋?phase8 鏂瑰悜楠岃瘉
-- 绛夊緟瀹㈡埛纭 `V_IRS_ORDERFTP` 璇箟涓庣敓鍛藉懆鏈熻〃鍚庯紝鍐嶈繘鍏ユ寮?phase8
+## Documentation Rules
 
+- 当前状态判断以 `PROJECT_INDEX.md` 和 `reports/current/` 为准。
+- 执行入口以 `RUNNERS_INDEX.md` 为准。
+- 历史阶段报告主要在 `reports/phase5*/`, `reports/phase6*/`, `reports/phase7*/`。
+- 历史 runner 主要在 `scripts/runners/phase5/` 到 `scripts/runners/phase8/`。
+- 旧的 LSTM 背景说明可以作为历史上下文阅读，但不代表当前官方主线。
 
+## Versioning Rules
+
+- Git 主要跟踪源码、配置、关键结论文档和当前入口文档。
+- 大部分原始数据、处理中间产物、模型二进制和导出报表默认不纳入版本库。
+- 当前官方参考入口已经收敛到 `DOCS_INDEX.md`, `PROJECT_INDEX.md`, `RUNNERS_INDEX.md`, `reports/current/`。
