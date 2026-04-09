@@ -78,6 +78,66 @@ def build_feature_indices(meta, feature_set):
     return [index_map[name] for name in selected], selected
 
 
+def build_asymmetric_state_weights(x_train_sel, y_train_cls, y_train_reg, selected_cols):
+    config = {
+        "short_zero_neg_mult": float(os.environ.get("EXP_SHORT_ZERO_NEG_MULT", "1.0")),
+        "short_zero_pos_mult": float(os.environ.get("EXP_SHORT_ZERO_POS_MULT", "1.0")),
+        "short_zero_reg_mult": float(os.environ.get("EXP_SHORT_ZERO_REG_MULT", "1.0")),
+        "long_zero_neg_mult": float(os.environ.get("EXP_LONG_ZERO_NEG_MULT", "1.0")),
+        "long_zero_pos_mult": float(os.environ.get("EXP_LONG_ZERO_POS_MULT", "1.0")),
+        "long_zero_reg_mult": float(os.environ.get("EXP_LONG_ZERO_REG_MULT", "1.0")),
+    }
+    enabled = any(abs(value - 1.0) > 1e-6 for value in config.values())
+
+    pos = max(float(y_train_cls.sum()), 1.0)
+    neg = max(float(len(y_train_cls) - y_train_cls.sum()), 1.0)
+    pos_weight = neg / pos
+    cls_weights = np.where(y_train_cls > 0, pos_weight, 1.0).astype(np.float32)
+    reg_weights = np.ones_like(y_train_reg, dtype=np.float32)
+
+    info = {
+        "enabled": enabled,
+        "config": config,
+        "short_zero_rows": 0,
+        "long_zero_rows": 0,
+        "short_zero_positive_rows": 0,
+        "long_zero_positive_rows": 0,
+    }
+    if not enabled:
+        return cls_weights, reg_weights, info
+
+    feature_to_idx = {name: idx for idx, name in enumerate(selected_cols)}
+    short_idx = feature_to_idx.get("inv_short_zero")
+    long_idx = feature_to_idx.get("inv_long_zero")
+    if short_idx is None or long_idx is None:
+        info["enabled"] = False
+        info["note"] = "missing_zero_split_features"
+        return cls_weights, reg_weights, info
+
+    short_mask = np.asarray(x_train_sel[:, short_idx] > 0.5, dtype=bool)
+    long_mask = np.asarray(x_train_sel[:, long_idx] > 0.5, dtype=bool)
+    pos_mask = np.asarray(y_train_cls > 0, dtype=bool)
+    neg_mask = ~pos_mask
+
+    cls_weights[short_mask & neg_mask] *= np.float32(config["short_zero_neg_mult"])
+    cls_weights[short_mask & pos_mask] *= np.float32(config["short_zero_pos_mult"])
+    cls_weights[long_mask & neg_mask] *= np.float32(config["long_zero_neg_mult"])
+    cls_weights[long_mask & pos_mask] *= np.float32(config["long_zero_pos_mult"])
+
+    reg_weights[short_mask & pos_mask] *= np.float32(config["short_zero_reg_mult"])
+    reg_weights[long_mask & pos_mask] *= np.float32(config["long_zero_reg_mult"])
+
+    info.update(
+        {
+            "short_zero_rows": int(short_mask.sum()),
+            "long_zero_rows": int(long_mask.sum()),
+            "short_zero_positive_rows": int((short_mask & pos_mask).sum()),
+            "long_zero_positive_rows": int((long_mask & pos_mask).sum()),
+        }
+    )
+    return cls_weights, reg_weights, info
+
+
 def main():
     exp_id = os.environ.get("EXP_ID", "phase53_tabular")
     feature_set = os.environ.get("EXP_FEATURE_SET", "core").lower()
@@ -131,11 +191,15 @@ def main():
     x_train_sel = np.nan_to_num(np.asarray(x_train[:, selected_idx], dtype=np.float32), nan=0.0, posinf=0.0, neginf=0.0)
     x_val_sel = np.nan_to_num(np.asarray(x_val[:, selected_idx], dtype=np.float32), nan=0.0, posinf=0.0, neginf=0.0)
 
+    cls_weights, reg_weights, asym_info = build_asymmetric_state_weights(
+        x_train_sel,
+        y_train_cls,
+        y_train_reg,
+        selected_cols,
+    )
     pos = max(float(y_train_cls.sum()), 1.0)
     neg = max(float(len(y_train_cls) - y_train_cls.sum()), 1.0)
     pos_weight = neg / pos
-    cls_weights = np.where(y_train_cls > 0, pos_weight, 1.0).astype(np.float32)
-    reg_weights = np.ones_like(y_train_reg, dtype=np.float32)
 
     print("=" * 72)
     print("Phase 5.3 tabular hurdle training")
@@ -144,6 +208,24 @@ def main():
         f"gate_mode={gate_mode} | seed={seed} | backend={backend}"
     )
     print(f"train={len(y_train_cls):,} | val={len(y_val_cls):,} | pos_weight={pos_weight:.3f}")
+    if asym_info["enabled"]:
+        print(
+            "[asym] short_zero rows="
+            f"{asym_info['short_zero_rows']:,} "
+            f"(pos={asym_info['short_zero_positive_rows']:,}) | "
+            "long_zero rows="
+            f"{asym_info['long_zero_rows']:,} "
+            f"(pos={asym_info['long_zero_positive_rows']:,})"
+        )
+        print(
+            "[asym] "
+            f"short_neg={asym_info['config']['short_zero_neg_mult']:.2f} "
+            f"short_pos={asym_info['config']['short_zero_pos_mult']:.2f} "
+            f"short_reg={asym_info['config']['short_zero_reg_mult']:.2f} | "
+            f"long_neg={asym_info['config']['long_zero_neg_mult']:.2f} "
+            f"long_pos={asym_info['config']['long_zero_pos_mult']:.2f} "
+            f"long_reg={asym_info['config']['long_zero_reg_mult']:.2f}"
+        )
     print("=" * 72)
 
     t0 = time.time()
@@ -191,6 +273,7 @@ def main():
         "selected_feature_indices": selected_idx,
         "classifier_params": classifier_params,
         "regressor_params": regressor_params,
+        "asymmetric_state_weighting": asym_info,
         "elapsed_min": elapsed_min,
         "val_auc_at_050": auc,
         "val_f1_at_050": f1,
