@@ -10,6 +10,7 @@
 
 ## Current Official Entry Points
 
+- Docs index: `DOCS_INDEX.md`
 - Mainline metadata: `reports/current/current_mainline.json`
 - Freeze summary: `reports/current/current_freeze_summary.md`
 - Phase8 restart playbook: `reports/current/phase8_restart_playbook_20260409.md`
