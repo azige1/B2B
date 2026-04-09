@@ -4,6 +4,8 @@
 
 - Current phase: `phase7`
 - Current official mainline: `tail_full_lr005_l63_g027_n800_s2028 + sep098_oct093`
+- Current official tree family: `LightGBM`
+- Current phase8 working direction: `event + inventory` (shadow / exploratory only; not yet an official replacement)
 - Current objective status: the model is frozen as the official research mainline and is ready for delivery-readiness work.
 
 ## Current Official Entry Points
@@ -40,3 +42,4 @@
 
 - Use `reports/current/` and `data/current_assets.json` for current references.
 - Use phase-specific directories only when reproducing or auditing historical work.
+- If the official state changes, update `PROJECT_INDEX.md`, `readme.md`, and the corresponding files under `reports/current/` in the same commit.

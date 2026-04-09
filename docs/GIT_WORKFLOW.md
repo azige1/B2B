@@ -63,6 +63,7 @@ If a large file is important for reproducibility, record its path and generation
 - Treat phase directories as historical evidence.
 - Do not commit bulk evaluation logs by default.
 - Only commit a report artifact when it records a conclusion you expect future readers to rely on.
+- If the official mainline or phase status changes, update `readme.md`, `PROJECT_INDEX.md`, and the affected files under `reports/current/` in the same commit.
 
 ## Data Change Rules
 
