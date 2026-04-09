@@ -12,6 +12,7 @@
 
 - Mainline metadata: `reports/current/current_mainline.json`
 - Freeze summary: `reports/current/current_freeze_summary.md`
+- Phase8 restart playbook: `reports/current/phase8_restart_playbook_20260409.md`
 - Official December compare page: `reports/current/current_model_compare.html`
 - Official December compare CSV: `reports/current/current_model_compare.csv`
 - Official December compare summary: `reports/current/current_model_compare_summary.md`
