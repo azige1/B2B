@@ -37,7 +37,7 @@ B2B_Replenishment_System/
 ├── reports/                ← 评估报告、推断结果
 ├── evaluate.py             ← ★ 6维度完整评估（当前主入口）
 ├── evaluate_agg.py         ← ★ SKU聚合Ratio分析 + 冷启动
-├── run_phase5_experiments.py ← ★ Phase5 挂机实验Runner
+├── scripts/runners/phase5/run_phase5_experiments.py ← ★ Phase5 挂机实验Runner
 └── diagnostics/            ← 调试诊断工具
 ```
 
@@ -60,7 +60,7 @@ B2B_Replenishment_System/
 | 训练 | `src/train/run_training_v2.py` | `models_v{n}/best_enhanced_model.pth` |
 | 评估 | `evaluate.py` + `evaluate_agg.py` | `reports/eval_report*.txt` + `reports/phase5/` |
 | 推断 | `src/inference/generate_daily_inference.py` | `reports/daily_orders_{DATE}.csv` |
-| 实验管理 | `run_phase5_experiments.py` | 自动化12组实验 |
+| 实验管理 | `scripts/runners/phase5/run_phase5_experiments.py` | 自动化12组实验 |
 
 ## 新人第一次应该先看的文件
 

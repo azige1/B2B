@@ -22,7 +22,7 @@ python -m src.features.build_features_v5_sku
 
 ### 第二步：运行挂机 Runner
 ```bash
-python run_phase5_experiments.py
+python scripts/runners/phase5/run_phase5_experiments.py
 ```
 *说明*: 脚本会按顺序执行 12 组实验。
 

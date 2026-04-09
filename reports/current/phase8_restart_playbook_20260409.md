@@ -29,23 +29,23 @@
 
 ### Zero-Split Baseline
 
-- Runner: `run_phase8h_inventory_zero_split_shadow_2026.py`
+- Runner: `scripts/runners/phase8/run_phase8h_inventory_zero_split_shadow_2026.py`
 - Summary script: `src/analysis/summarize_phase8h_inventory_zero_split_results.py`
 - Result summary: `reports/phase8_inventory_zero_split_shadow_2026/phase8_inventory_zero_split_summary.md`
 - Result json: `reports/phase8_inventory_zero_split_shadow_2026/phase8_inventory_zero_split_result.json`
 
 ### Asymmetric Training Follow-Up
 
-- Runner: `run_phase8k_zero_split_asym_train_2026.py`
+- Runner: `scripts/runners/phase8/run_phase8k_zero_split_asym_train_2026.py`
 - Summary script: `src/analysis/summarize_phase8k_zero_split_asym_results.py`
 - Result summary: `reports/phase8_zero_split_asym_train_2026/phase8_zero_split_asym_summary.md`
 - Result json: `reports/phase8_zero_split_asym_train_2026/phase8_zero_split_asym_result.json`
 
 ### Supporting Analyses
 
-- Snapshot zero-stock case pack: `run_phase8g_snapshot_zero_stock_case_pack.py`
-- Rule search: `run_phase8i_zero_split_rule_search.py`
-- Hard-gate search: `run_phase8j_zero_split_hard_gate_search.py`
+- Snapshot zero-stock case pack: `scripts/runners/phase8/run_phase8g_snapshot_zero_stock_case_pack.py`
+- Rule search: `scripts/runners/phase8/run_phase8i_zero_split_rule_search.py`
+- Hard-gate search: `scripts/runners/phase8/run_phase8j_zero_split_hard_gate_search.py`
 - Event+inventory detail pack: `src/analysis/generate_phase8d_event_inventory_shadow_detail_pack.py`
 
 ## Current Decision Gate

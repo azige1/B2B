@@ -82,7 +82,7 @@ B2B_Replenishment_System/
 │
 ├── evaluate.py                        ← ★ 6维度完整评估（高频入口）
 ├── evaluate_agg.py                    ← ★ SKU聚合Ratio分析
-├── run_phase5_experiments.py          ← ★ Phase 5 挂机Runner
+├── scripts/runners/phase5/run_phase5_experiments.py          ← ★ Phase 5 挂机Runner
 ├── run_training_weekly.py             ← 周频训练（已放弃）
 ├── run_weekly_experiments.py          ← 周频实验Runner（已放弃）
 ├── check_phase5_code.py              ← Phase 5 代码检查

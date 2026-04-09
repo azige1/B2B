@@ -33,9 +33,9 @@
 
 当前仓库中保留了从 `phase5` 到 `phase7` 的 runner、汇总脚本和阶段报告，包括：
 
-- `run_phase5*`
-- `run_phase6*`
-- `run_phase7*`
+- `scripts/runners/phase5/run_phase5*`
+- `scripts/runners/phase6/run_phase6*`
+- `scripts/runners/phase7/run_phase7*`
 - `reports/phase5*/`
 - `reports/phase6*/`
 - `reports/phase7*/`
@@ -109,7 +109,7 @@
 
 截至 `2026-04-09`，仓库中最新的 phase8 工作已继续推进到库存约束分析：
 
-- `run_phase8f_inventory_constraint_pack.py`
+- `scripts/runners/phase8/run_phase8f_inventory_constraint_pack.py`
 - `src/analysis/generate_phase8f_inventory_constraint_pack.py`
 - `reports/phase8_extended_signal_2026/phase8_inventory_constraint_summary.md`
 

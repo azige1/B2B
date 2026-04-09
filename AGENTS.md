@@ -29,7 +29,7 @@
 | ★★☆ | `src/features/build_features_v2_sku.py` | V3 特征工程（7维原始版） | 🟡 中等 |
 | ★★☆ | `evaluate.py` | 6维度评估脚本 | 🟡 中等 |
 | ★★☆ | `evaluate_agg.py` | SKU级聚合Ratio分析 + 冷启动诊断 | 🟡 中等 |
-| ★☆☆ | `run_phase5_experiments.py` | 12组挂机实验Runner | 🟢 低 |
+| ★☆☆ | `scripts/runners/phase5/run_phase5_experiments.py` | 12组挂机实验Runner | 🟢 低 |
 | ★☆☆ | `config/model_config.yaml` | 超参数配置（唯一真相源） | 🟡 中等 |
 
 ---
@@ -37,7 +37,7 @@
 ## 3. 修改区域规则
 
 ### ✅ 允许修改的区域
-- `run_phase5_experiments.py` — 实验定义、Runner 逻辑
+- `scripts/runners/phase5/run_phase5_experiments.py` — 实验定义、Runner 逻辑
 - `evaluate_agg.py` — 评估分析逻辑
 - `src/evaluate/*.py` — 评估脚本
 - `scripts/`, `diagnostics/` — 工具脚本
@@ -179,7 +179,7 @@ python -m src.train.run_training_v2             # 使用 config 默认值
 EXP_VERSION=v5 EXP_MODEL_TYPE=bilstm python -m src.train.run_training_v2  # 指定版本
 
 # 挂机实验（12组）
-python run_phase5_experiments.py
+python scripts/runners/phase5/run_phase5_experiments.py
 
 # 评估
 python evaluate.py                             # 6维度完整评估

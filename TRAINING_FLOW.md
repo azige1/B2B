@@ -7,7 +7,7 @@
 python -m src.train.run_training_v2
 
 # 挂机实验模式（Phase 5 Runner 注入环境变量后调用同一入口）
-python run_phase5_experiments.py
+python scripts/runners/phase5/run_phase5_experiments.py
 # Runner 内部调用: subprocess.Popen([sys.executable, "src/train/run_training_v2.py"], env=env)
 ```
 
@@ -18,7 +18,7 @@ python run_phase5_experiments.py
 ## 2. 完整调用链
 
 ```
-run_phase5_experiments.py (Phase 5 Runner)
+scripts/runners/phase5/run_phase5_experiments.py (Phase 5 Runner)
   └─ subprocess.Popen → src/train/run_training_v2.py::main()
       │
       ├─ [1] 配置加载
