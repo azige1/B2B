@@ -1,0 +1,18 @@
+{
+  "status": "analysis_only",
+  "focus_state": "snapshot_zero_stock",
+  "source": "reports/phase8_event_inventory_shadow_2026/phase8_event_inventory_shadow_row_compare.csv",
+  "outputs": {
+    "anchor_mix": "reports/phase8_snapshot_zero_stock_2026/phase8_snapshot_zero_stock_anchor_mix.csv",
+    "zero_true_compare": "reports/phase8_snapshot_zero_stock_2026/phase8_snapshot_zero_stock_zero_true_compare.csv",
+    "positive_true_compare": "reports/phase8_snapshot_zero_stock_2026/phase8_snapshot_zero_stock_positive_true_compare.csv",
+    "cases": "reports/phase8_snapshot_zero_stock_2026/phase8_snapshot_zero_stock_cases.csv",
+    "summary": "reports/phase8_snapshot_zero_stock_2026/phase8_snapshot_zero_stock_summary.md"
+  },
+  "counts": {
+    "anchor_mix_rows": 12,
+    "zero_true_compare_rows": 3,
+    "positive_true_compare_rows": 3,
+    "case_rows": 120
+  }
+}

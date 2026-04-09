@@ -10,6 +10,7 @@ DATA_DIR = os.path.join(PROJECT_ROOT, "data")
 
 ANCHORS = ["2026-02-15", "2026-02-24"]
 WEAK_QUADRANTS = {"repl0_fut0", "repl1_fut0"}
+INVENTORY_WINDOWS = (7, 14, 30)
 
 OUT_ROW_COMPARE = os.path.join(OUT_DIR, "phase8_event_inventory_shadow_row_compare.csv")
 OUT_CASES = os.path.join(OUT_DIR, "phase8_event_inventory_shadow_focus_cases.csv")
@@ -40,6 +41,40 @@ def markdown_table(df, columns):
                 vals.append(str(value))
         rows.append("| " + " | ".join(vals) + " |")
     return "\n".join([headers, sep, *rows])
+
+
+def rolling_sum_matrix(matrix, window):
+    if matrix.size == 0:
+        return np.zeros_like(matrix, dtype=np.float32)
+    padded = np.pad(matrix.astype(np.float64), ((0, 0), (1, 0)), mode="constant")
+    csum = np.cumsum(padded, axis=1)
+    idx = np.arange(1, matrix.shape[1] + 1)
+    starts = np.maximum(0, idx - window)
+    return (csum[:, idx] - csum[:, starts]).astype(np.float32)
+
+
+def days_since_last_positive(arr):
+    out = np.full(len(arr), 120.0, dtype=np.float32)
+    last_idx = -1
+    for i, value in enumerate(arr):
+        if value > 0:
+            last_idx = i
+            out[i] = 0.0
+        elif last_idx >= 0:
+            out[i] = float(i - last_idx)
+    return out
+
+
+def active_streak(arr):
+    out = np.zeros(len(arr), dtype=np.float32)
+    streak = 0.0
+    for i, value in enumerate(arr):
+        if value > 0:
+            streak += 1.0
+            out[i] = streak
+        else:
+            streak = 0.0
+    return out
 
 
 def load_static_products():
@@ -98,11 +133,125 @@ def load_inventory_daily():
     df["sku_id"] = df["sku_id"].astype(str)
     # Match the shadow builder's effective behavior: repeated date+sku rows overwrite earlier values.
     df = df.drop_duplicates(["date", "sku_id"], keep="last").copy()
-    df["inv_total_stock"] = df["qty_storage_stock"].fillna(0.0) + df["qty_b2b_hq_stock"].fillna(0.0)
+
+    if "qty_total_stock" not in df.columns:
+        df["qty_total_stock"] = df["qty_storage_stock"].fillna(0.0) + df["qty_b2b_hq_stock"].fillna(0.0)
+    if "snapshot_present" not in df.columns:
+        df["snapshot_present"] = (
+            (pd.to_numeric(df["has_storage_snapshot"], errors="coerce").fillna(0.0) > 0)
+            | (pd.to_numeric(df["has_b2b_snapshot"], errors="coerce").fillna(0.0) > 0)
+        ).astype(int)
+    if "stock_positive" not in df.columns:
+        df["stock_positive"] = (
+            (pd.to_numeric(df["snapshot_present"], errors="coerce").fillna(0.0) > 0)
+            & (pd.to_numeric(df["qty_total_stock"], errors="coerce").fillna(0.0) > 0)
+        ).astype(int)
+    if "stock_zero" not in df.columns:
+        df["stock_zero"] = (
+            (pd.to_numeric(df["snapshot_present"], errors="coerce").fillna(0.0) > 0)
+            & (pd.to_numeric(df["qty_total_stock"], errors="coerce").fillna(0.0) <= 0)
+        ).astype(int)
+
+    all_dates = sorted(df["date"].unique().tolist())
+    date_to_idx = {date: idx for idx, date in enumerate(all_dates)}
+    sku_values = sorted(df["sku_id"].unique().tolist())
+    sku_to_idx = {sku: idx for idx, sku in enumerate(sku_values)}
+    mats = {
+        "snapshot_present": np.zeros((len(sku_values), len(all_dates)), dtype=np.float32),
+        "stock_positive": np.zeros((len(sku_values), len(all_dates)), dtype=np.float32),
+        "stock_zero": np.zeros((len(sku_values), len(all_dates)), dtype=np.float32),
+    }
+    for row in df.itertuples(index=False):
+        sku_idx = sku_to_idx.get(str(row.sku_id))
+        day_idx = date_to_idx.get(row.date)
+        if sku_idx is None or day_idx is None:
+            continue
+        mats["snapshot_present"][sku_idx, day_idx] = float(row.snapshot_present)
+        mats["stock_positive"][sku_idx, day_idx] = float(row.stock_positive)
+        mats["stock_zero"][sku_idx, day_idx] = float(row.stock_zero)
+
+    rolling = {}
+    for state_col in ["snapshot_present", "stock_positive", "stock_zero"]:
+        for window in INVENTORY_WINDOWS:
+            rolling[f"{state_col}_{window}"] = rolling_sum_matrix(mats[state_col], window)
+
+    recency_snapshot = np.zeros((len(sku_values), len(all_dates)), dtype=np.float32)
+    recency_positive = np.zeros((len(sku_values), len(all_dates)), dtype=np.float32)
+    recency_zero = np.zeros((len(sku_values), len(all_dates)), dtype=np.float32)
+    zero_streak = np.zeros((len(sku_values), len(all_dates)), dtype=np.float32)
+    positive_to_zero_switch = np.zeros((len(sku_values), len(all_dates)), dtype=np.float32)
+    for idx in range(len(sku_values)):
+        recency_snapshot[idx] = days_since_last_positive(mats["snapshot_present"][idx])
+        recency_positive[idx] = days_since_last_positive(mats["stock_positive"][idx])
+        recency_zero[idx] = days_since_last_positive(mats["stock_zero"][idx])
+        zero_streak[idx] = active_streak(mats["stock_zero"][idx])
+        positive_to_zero_switch[idx, 1:] = (
+            (mats["stock_zero"][idx, 1:] > 0) & (mats["stock_positive"][idx, :-1] > 0)
+        ).astype(np.float32)
+
+    derived_cols = {
+        "inv_snapshot_present_7": [],
+        "inv_snapshot_present_14": [],
+        "inv_snapshot_present_30": [],
+        "inv_stock_positive_7": [],
+        "inv_stock_positive_14": [],
+        "inv_stock_positive_30": [],
+        "inv_stock_zero_7": [],
+        "inv_stock_zero_14": [],
+        "inv_stock_zero_30": [],
+        "inv_days_since_last_snapshot": [],
+        "inv_days_since_last_stock_positive": [],
+        "inv_days_since_last_stock_zero": [],
+        "inv_stock_zero_streak": [],
+        "inv_positive_to_zero_switch": [],
+        "inv_short_zero": [],
+        "inv_long_zero": [],
+        "inv_short_zero_7": [],
+        "inv_short_zero_14": [],
+        "inv_short_zero_30": [],
+        "inv_long_zero_7": [],
+        "inv_long_zero_14": [],
+        "inv_long_zero_30": [],
+    }
+    for row in df.itertuples(index=False):
+        sku_idx = sku_to_idx[str(row.sku_id)]
+        day_idx = date_to_idx[row.date]
+        short_zero_value = float(
+            (mats["stock_zero"][sku_idx, day_idx] > 0) and (zero_streak[sku_idx, day_idx] <= 7)
+        )
+        long_zero_value = float(
+            (mats["stock_zero"][sku_idx, day_idx] > 0) and (zero_streak[sku_idx, day_idx] > 7)
+        )
+        derived_cols["inv_snapshot_present_7"].append(float(rolling["snapshot_present_7"][sku_idx, day_idx]))
+        derived_cols["inv_snapshot_present_14"].append(float(rolling["snapshot_present_14"][sku_idx, day_idx]))
+        derived_cols["inv_snapshot_present_30"].append(float(rolling["snapshot_present_30"][sku_idx, day_idx]))
+        derived_cols["inv_stock_positive_7"].append(float(rolling["stock_positive_7"][sku_idx, day_idx]))
+        derived_cols["inv_stock_positive_14"].append(float(rolling["stock_positive_14"][sku_idx, day_idx]))
+        derived_cols["inv_stock_positive_30"].append(float(rolling["stock_positive_30"][sku_idx, day_idx]))
+        derived_cols["inv_stock_zero_7"].append(float(rolling["stock_zero_7"][sku_idx, day_idx]))
+        derived_cols["inv_stock_zero_14"].append(float(rolling["stock_zero_14"][sku_idx, day_idx]))
+        derived_cols["inv_stock_zero_30"].append(float(rolling["stock_zero_30"][sku_idx, day_idx]))
+        derived_cols["inv_days_since_last_snapshot"].append(float(recency_snapshot[sku_idx, day_idx]))
+        derived_cols["inv_days_since_last_stock_positive"].append(float(recency_positive[sku_idx, day_idx]))
+        derived_cols["inv_days_since_last_stock_zero"].append(float(recency_zero[sku_idx, day_idx]))
+        derived_cols["inv_stock_zero_streak"].append(float(zero_streak[sku_idx, day_idx]))
+        derived_cols["inv_positive_to_zero_switch"].append(float(positive_to_zero_switch[sku_idx, day_idx]))
+        derived_cols["inv_short_zero"].append(short_zero_value)
+        derived_cols["inv_long_zero"].append(long_zero_value)
+        derived_cols["inv_short_zero_7"].append(float(min(zero_streak[sku_idx, day_idx], 7.0)) if short_zero_value > 0 else 0.0)
+        derived_cols["inv_short_zero_14"].append(float(min(zero_streak[sku_idx, day_idx], 14.0)) if short_zero_value > 0 else 0.0)
+        derived_cols["inv_short_zero_30"].append(float(min(zero_streak[sku_idx, day_idx], 30.0)) if short_zero_value > 0 else 0.0)
+        derived_cols["inv_long_zero_7"].append(float(rolling["stock_zero_7"][sku_idx, day_idx]) if long_zero_value > 0 else 0.0)
+        derived_cols["inv_long_zero_14"].append(float(rolling["stock_zero_14"][sku_idx, day_idx]) if long_zero_value > 0 else 0.0)
+        derived_cols["inv_long_zero_30"].append(float(rolling["stock_zero_30"][sku_idx, day_idx]) if long_zero_value > 0 else 0.0)
+    for col, values in derived_cols.items():
+        df[col] = values
+
+    df["inv_total_stock"] = pd.to_numeric(df["qty_total_stock"], errors="coerce").fillna(0.0)
     df["inv_b2b_hq_stock_log1p"] = np.log1p(df["qty_b2b_hq_stock"].fillna(0.0).clip(lower=0.0))
     df["inv_total_stock_log1p"] = np.log1p(df["inv_total_stock"].clip(lower=0.0))
     df["inv_stock_bucket"] = pd.cut(
-        df["qty_b2b_hq_stock"].fillna(0.0),
+        df["inv_total_stock"].fillna(0.0),
         bins=[-1e-9, 0.0, 10.0, 50.0, np.inf],
         labels=["0", "1-10", "11-50", "50+"],
     ).astype(str)
@@ -116,6 +265,31 @@ def load_inventory_daily():
         "inv_total_stock_log1p",
         "has_storage_snapshot",
         "has_b2b_snapshot",
+        "snapshot_present",
+        "stock_positive",
+        "stock_zero",
+        "inv_snapshot_present_7",
+        "inv_snapshot_present_14",
+        "inv_snapshot_present_30",
+        "inv_stock_positive_7",
+        "inv_stock_positive_14",
+        "inv_stock_positive_30",
+        "inv_stock_zero_7",
+        "inv_stock_zero_14",
+        "inv_stock_zero_30",
+        "inv_days_since_last_snapshot",
+        "inv_days_since_last_stock_positive",
+        "inv_days_since_last_stock_zero",
+        "inv_stock_zero_streak",
+        "inv_positive_to_zero_switch",
+        "inv_short_zero",
+        "inv_long_zero",
+        "inv_short_zero_7",
+        "inv_short_zero_14",
+        "inv_short_zero_30",
+        "inv_long_zero_7",
+        "inv_long_zero_14",
+        "inv_long_zero_30",
         "inv_stock_bucket",
     ]
     return df[keep_cols].copy()
@@ -384,6 +558,31 @@ def build_focus_cases(row_df):
         "qty_b2b_hq_stock",
         "qty_storage_stock",
         "inv_total_stock",
+        "snapshot_present",
+        "stock_positive",
+        "stock_zero",
+        "inv_snapshot_present_7",
+        "inv_snapshot_present_14",
+        "inv_snapshot_present_30",
+        "inv_stock_positive_7",
+        "inv_stock_positive_14",
+        "inv_stock_positive_30",
+        "inv_stock_zero_7",
+        "inv_stock_zero_14",
+        "inv_stock_zero_30",
+        "inv_days_since_last_snapshot",
+        "inv_days_since_last_stock_positive",
+        "inv_days_since_last_stock_zero",
+        "inv_stock_zero_streak",
+        "inv_positive_to_zero_switch",
+        "inv_short_zero",
+        "inv_long_zero",
+        "inv_short_zero_7",
+        "inv_short_zero_14",
+        "inv_short_zero_30",
+        "inv_long_zero_7",
+        "inv_long_zero_14",
+        "inv_long_zero_30",
         "inv_stock_bucket",
     ]
     return cases[keep_cols].reset_index(drop=True) if not cases.empty else cases
@@ -510,7 +709,8 @@ def build_summary(weak_df, zero_df, category_df, cases_df):
                 "base_pred_qty",
                 "shadow_pred_qty",
                 "event_daily_order_success_30",
-                "qty_b2b_hq_stock",
+                "inv_total_stock",
+                "stock_positive",
                 "abs_error_gain",
             ],
         ) if not improved_cases.empty else "No improved weak-signal cases.",
@@ -528,7 +728,8 @@ def build_summary(weak_df, zero_df, category_df, cases_df):
                 "base_pred_qty",
                 "shadow_pred_qty",
                 "event_daily_order_success_30",
-                "qty_b2b_hq_stock",
+                "inv_total_stock",
+                "stock_zero",
                 "abs_error_gain",
             ],
         ) if not worsened_cases.empty else "No worsened weak-signal cases.",

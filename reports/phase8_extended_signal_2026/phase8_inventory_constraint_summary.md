@@ -2,30 +2,33 @@
 
 - Status: `analysis_only`
 - Source: `phase8_event_inventory_shadow_2026/phase8_event_inventory_shadow_row_compare.csv`
-- Purpose: assess whether current inventory-aware shadow can distinguish `true=0` rows that may be stock-constrained rather than true no-demand.
+- Purpose: inspect whether the 2026 event+inventory shadow behaves differently across `no_snapshot`, `snapshot_zero_stock`, and `snapshot_positive_stock`.
 
 ## Bottom Line
 
-- 当前正式 `phase7` 主线仍然不能识别库存约束，因为它没有使用库存特征。
-- `event + inventory` 影子线已经能利用**正库存信号**改善预测，但还不能严格识别“明确缺货导致未补货”。
-- 原因是当前库存特征表没有保留“存在快照但库存为 0”的独立状态；`snapshot_zero_stock` 在影子明细里为 0 行。
+- This pack does not change the official phase7 mainline.
+- Inventory states are now evaluated explicitly instead of inferring zero stock from presence flags.
+- The practical question is whether `snapshot_zero_stock` behaves differently from `no_snapshot` after the semantic fix.
 
 ## Zero-True by Stock State
 
 | stock_state | rows | base_fp_rate | shadow_fp_rate | fp_rate_delta | event_strong_rate | lookback_repl_pos_rate | qfo_ge_25_rate |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| no_stock_signal | 8669 | 0.1459 | 0.0816 | -0.0644 | 0.0239 | 0.2779 | 0.4237 |
-| snapshot_positive_stock | 7624 | 0.2635 | 0.2529 | -0.0106 | 0.0353 | 0.3342 | 0.6616 |
+| no_snapshot | 8525 | 0.1347 | 0.0622 | -0.0725 | 0.0238 | 0.2672 | 0.4163 |
+| snapshot_positive_stock | 7624 | 0.2642 | 0.3107 | 0.0466 | 0.0353 | 0.3342 | 0.6616 |
+| snapshot_zero_stock | 144 | 0.9306 | 0.7569 | -0.1736 | 0.0278 | 0.9097 | 0.8611 |
 
-- `true=0` 且 `no_stock_signal` 的行共有 `8669`，`base_fp_rate=0.1459`，`shadow_fp_rate=0.0816`。
-- `true=0` 且 `snapshot_positive_stock` 的行共有 `7624`，`base_fp_rate=0.2635`，`shadow_fp_rate=0.2529`。
+- `true=0` rows with `no_snapshot`: `8525`, `base_fp_rate=0.1347`, `shadow_fp_rate=0.0622`.
+- `true=0` rows with `snapshot_zero_stock`: `144`, `base_fp_rate=0.9306`, `shadow_fp_rate=0.7569`.
+- `true=0` rows with `snapshot_positive_stock`: `7624`, `base_fp_rate=0.2642`, `shadow_fp_rate=0.3107`.
 
 ## Positive-True Under-Predict by Stock State
 
 | stock_state | rows | true_sum | base_under_wape | shadow_under_wape | under_wape_delta | event_strong_rate | mean_total_stock |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| snapshot_positive_stock | 3104 | 13453.0001 | 0.3497 | 0.2571 | -0.0926 | 0.2368 | 21.3611 |
-| no_stock_signal | 883 | 2915.0000 | 0.5508 | 0.5706 | 0.0198 | 0.1427 | 0.0000 |
+| snapshot_positive_stock | 3104 | 13453.0001 | 0.3483 | 0.2408 | -0.1075 | 0.2368 | 21.3611 |
+| no_snapshot | 785 | 2772.0000 | 0.5707 | 0.5973 | 0.0267 | 0.1363 | 0.0000 |
+| snapshot_zero_stock | 98 | 143.0000 | 0.0649 | 0.1689 | 0.1040 | 0.1939 | 0.0000 |
 
 ## Inventory Source Audit
 
@@ -34,20 +37,24 @@
 - duplicate `date+sku` rows in inventory_daily_features: `66749`
 - inventory rows with `qty_storage_stock = 0`: `72994`
 - inventory rows with `qty_b2b_hq_stock = 0`: `383239`
+- inventory rows with `snapshot_present = 1`: `562552`
+- inventory rows with `stock_zero = 1`: `8661`
 - wide `qty_stock > 0` rate after `2026-01-23`: `0.8252`
-- wide `is_real_stock > 0` rate after `2026-01-23`: `0.8252`
+- wide `is_real_stock > 0` rate after `2026-01-23`: `0.8361`
+- wide `snapshot_present = 1` rate after `2026-01-23`: `0.8361`
+- wide `stock_zero = 1` rate after `2026-01-23`: `0.0110`
 
 ## Interpretation
 
-- `snapshot_positive_stock` 可以被识别，这也是 `event + inventory` 影子线在 2026 两锚点上明显改善的原因之一。
-- `no_stock_signal` 目前不能直接解释成缺货。它可能是：没有快照、快照漏匹配、或真实 0 库存被当前 presence 逻辑吞掉。
-- 因为 `snapshot_zero_stock` 为 0 行，当前还不能回答“明确有快照且库存为 0 时模型怎么判断”。
+- `snapshot_positive_stock` captures rows with explicit inventory support.
+- `snapshot_zero_stock` captures rows where a snapshot exists but total stock is zero or below.
+- `no_snapshot` now means missing snapshot evidence, not zero stock by default.
 
 ## Practical Answer
 
-- 现在模型**能部分区分**“有库存支撑的需求”和“无库存信号的样本”。
-- 现在模型**还不能严格区分**“没补货是因为缺货”与“没补货是因为真没需求”。
-- 如果要把这件事做严，需要下一步修库存特征生成逻辑，保留**原始快照存在性**与**0 库存状态**，而不是把 presence 直接定义成 `qty > 0`。
+- If `snapshot_zero_stock` now shows a distinct error pattern from `no_snapshot`, the inventory line is carrying more than a pure positive-stock signal.
+- If the gains still sit almost entirely in `snapshot_positive_stock`, most of the lift is coming from positive-stock evidence.
+- Candidate `true=0` demand-risk rows exported for follow-up: `200`.
 
 ## Output Files
 

@@ -9,16 +9,16 @@
 
 | metric | base_tail_full | event_inventory_shadow | delta |
 | --- | --- | --- | --- |
-| global_ratio | 1.0946 | 1.0476 | -0.0471 |
-| global_wmape | 0.8614 | 0.6667 | -0.1947 |
-| 4_25_under_wape | 0.4384 | 0.3452 | -0.0932 |
-| 4_25_sku_p50 | 0.5966 | 0.6818 | +0.0852 |
-| ice_4_25_sku_p50 | 0.5234 | 0.6212 | +0.0978 |
-| blockbuster_under_wape | 0.4934 | 0.3773 | -0.1161 |
-| blockbuster_sku_p50 | 0.4735 | 0.6326 | +0.1591 |
-| top20_true_volume_capture | 0.5606 | 0.5766 | +0.0161 |
-| rank_corr_positive_skus | 0.6918 | 0.7522 | +0.0604 |
-| 1_3_ratio | 1.1421 | 1.0749 | -0.0671 |
+| global_ratio | 1.0999 | 1.0935 | -0.0064 |
+| global_wmape | 0.8623 | 0.6874 | -0.1749 |
+| 4_25_under_wape | 0.4371 | 0.3331 | -0.1040 |
+| 4_25_sku_p50 | 0.5966 | 0.6999 | +0.1033 |
+| ice_4_25_sku_p50 | 0.5251 | 0.6303 | +0.1052 |
+| blockbuster_under_wape | 0.4934 | 0.3697 | -0.1237 |
+| blockbuster_sku_p50 | 0.4735 | 0.6513 | +0.1778 |
+| top20_true_volume_capture | 0.5603 | 0.5693 | +0.0090 |
+| rank_corr_positive_skus | 0.6963 | 0.7538 | +0.0575 |
+| 1_3_ratio | 1.1495 | 1.0955 | -0.0540 |
 
 ## Interpretation
 

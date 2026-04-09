@@ -26,6 +26,9 @@ from src.features.phase53_feature_utils import (
 
 
 EVENT_WINDOWS = (7, 14, 30)
+INVENTORY_WINDOWS = (7, 14, 30)
+ZERO_SPLIT_MODE = os.environ.get("FEATURE_INVENTORY_ZERO_SPLIT_MODE", "").strip().lower()
+USE_ZERO_SPLIT = ZERO_SPLIT_MODE == "split"
 EVENT_COLS = [
     *[f"event_active_buyers_{window}" for window in EVENT_WINDOWS],
     *[f"event_clicks_{window}" for window in EVENT_WINDOWS],
@@ -50,8 +53,28 @@ INVENTORY_COLS = [
     "inv_total_stock_log1p",
     "inv_has_b2b_snapshot",
     "inv_has_storage_snapshot",
+    "inv_snapshot_present",
+    "inv_stock_positive",
+    "inv_stock_zero",
+    *[f"inv_snapshot_present_{window}" for window in INVENTORY_WINDOWS],
+    *[f"inv_stock_positive_{window}" for window in INVENTORY_WINDOWS],
+    *[f"inv_stock_zero_{window}" for window in INVENTORY_WINDOWS],
+    "inv_days_since_last_snapshot",
+    "inv_days_since_last_stock_positive",
+    "inv_days_since_last_stock_zero",
+    "inv_stock_zero_streak",
+    "inv_positive_to_zero_switch",
     "inv_stock_bucket",
 ]
+if USE_ZERO_SPLIT:
+    INVENTORY_COLS.extend(
+        [
+            "inv_short_zero",
+            "inv_long_zero",
+            *[f"inv_short_zero_{window}" for window in INVENTORY_WINDOWS],
+            *[f"inv_long_zero_{window}" for window in INVENTORY_WINDOWS],
+        ]
+    )
 EXTRA_COLS = EVENT_COLS + INVENTORY_COLS
 
 
@@ -86,10 +109,26 @@ def safe_rate(num, den):
     return out
 
 
+def active_streak(arr):
+    out = np.zeros(len(arr), dtype=np.float32)
+    streak = 0.0
+    for i, value in enumerate(arr):
+        if value > 0:
+            streak += 1.0
+            out[i] = streak
+        else:
+            streak = 0.0
+    return out
+
+
 def load_base_paths(split_date):
     tag = split_date.replace("-", "")
     base_tag = f"p8ei_{tag}_v6_event"
-    output_tag = f"p8einvshadow_{tag}_v6_event"
+    shadow_suffix = os.environ.get("FEATURE_SHADOW_SUFFIX", "").strip().lower()
+    if shadow_suffix:
+        output_tag = f"p8einvshadow_{shadow_suffix}_{tag}_v6_event"
+    else:
+        output_tag = f"p8einvshadow_{tag}_v6_event"
     base_processed = PROJECT_ROOT / "data" / f"processed_v6_event_{base_tag}"
     base_artifacts = PROJECT_ROOT / "data" / f"artifacts_v6_event_{base_tag}"
     out_processed = PROJECT_ROOT / "data" / f"processed_v6_event_{output_tag}"
@@ -277,11 +316,33 @@ def build_sku_inventory_arrays(sku_values, date_to_idx, n_days):
     df["sku_id"] = df["sku_id"].astype(str)
     sku_to_idx = {sku: idx for idx, sku in enumerate(sku_values)}
 
+    if "qty_total_stock" not in df.columns:
+        df["qty_total_stock"] = df["qty_storage_stock"].fillna(0.0) + df["qty_b2b_hq_stock"].fillna(0.0)
+    if "snapshot_present" not in df.columns:
+        df["snapshot_present"] = (
+            (pd.to_numeric(df["has_storage_snapshot"], errors="coerce").fillna(0.0) > 0)
+            | (pd.to_numeric(df["has_b2b_snapshot"], errors="coerce").fillna(0.0) > 0)
+        ).astype(float)
+    if "stock_positive" not in df.columns:
+        df["stock_positive"] = (
+            (pd.to_numeric(df["snapshot_present"], errors="coerce").fillna(0.0) > 0)
+            & (pd.to_numeric(df["qty_total_stock"], errors="coerce").fillna(0.0) > 0)
+        ).astype(float)
+    if "stock_zero" not in df.columns:
+        df["stock_zero"] = (
+            (pd.to_numeric(df["snapshot_present"], errors="coerce").fillna(0.0) > 0)
+            & (pd.to_numeric(df["qty_total_stock"], errors="coerce").fillna(0.0) <= 0)
+        ).astype(float)
+
     cols = [
         "qty_b2b_hq_stock",
         "qty_storage_stock",
+        "qty_total_stock",
         "has_b2b_snapshot",
         "has_storage_snapshot",
+        "snapshot_present",
+        "stock_positive",
+        "stock_zero",
     ]
     mats = {
         col: np.zeros((len(sku_values), n_days), dtype=np.float32)
@@ -294,15 +355,55 @@ def build_sku_inventory_arrays(sku_values, date_to_idx, n_days):
             continue
         mats["qty_b2b_hq_stock"][sku_idx, day_idx] = float(row.qty_b2b_hq_stock)
         mats["qty_storage_stock"][sku_idx, day_idx] = float(row.qty_storage_stock)
+        mats["qty_total_stock"][sku_idx, day_idx] = float(row.qty_total_stock)
         mats["has_b2b_snapshot"][sku_idx, day_idx] = float(row.has_b2b_snapshot)
         mats["has_storage_snapshot"][sku_idx, day_idx] = float(row.has_storage_snapshot)
+        mats["snapshot_present"][sku_idx, day_idx] = float(row.snapshot_present)
+        mats["stock_positive"][sku_idx, day_idx] = float(row.stock_positive)
+        mats["stock_zero"][sku_idx, day_idx] = float(row.stock_zero)
+
+    rolling = {}
+    for state_col in ["snapshot_present", "stock_positive", "stock_zero"]:
+        for window in INVENTORY_WINDOWS:
+            rolling[f"{state_col}_{window}"] = rolling_sum_matrix(mats[state_col], window)
+
+    mats["days_since_last_snapshot"] = np.zeros((len(sku_values), n_days), dtype=np.float32)
+    mats["days_since_last_stock_positive"] = np.zeros((len(sku_values), n_days), dtype=np.float32)
+    mats["days_since_last_stock_zero"] = np.zeros((len(sku_values), n_days), dtype=np.float32)
+    mats["stock_zero_streak"] = np.zeros((len(sku_values), n_days), dtype=np.float32)
+    mats["positive_to_zero_switch"] = np.zeros((len(sku_values), n_days), dtype=np.float32)
+    if USE_ZERO_SPLIT:
+        mats["short_zero"] = np.zeros((len(sku_values), n_days), dtype=np.float32)
+        mats["long_zero"] = np.zeros((len(sku_values), n_days), dtype=np.float32)
+
+    for idx in range(len(sku_values)):
+        mats["days_since_last_snapshot"][idx] = days_since_last_positive(mats["snapshot_present"][idx])
+        mats["days_since_last_stock_positive"][idx] = days_since_last_positive(mats["stock_positive"][idx])
+        mats["days_since_last_stock_zero"][idx] = days_since_last_positive(mats["stock_zero"][idx])
+        mats["stock_zero_streak"][idx] = active_streak(mats["stock_zero"][idx])
+        mats["positive_to_zero_switch"][idx, 1:] = (
+            (mats["stock_zero"][idx, 1:] > 0) & (mats["stock_positive"][idx, :-1] > 0)
+        ).astype(np.float32)
+        if USE_ZERO_SPLIT:
+            mats["short_zero"][idx] = (
+                (mats["stock_zero"][idx] > 0) & (mats["stock_zero_streak"][idx] <= 7)
+            ).astype(np.float32)
+            mats["long_zero"][idx] = (
+                (mats["stock_zero"][idx] > 0) & (mats["stock_zero_streak"][idx] > 7)
+            ).astype(np.float32)
+
+    mats["rolling"] = rolling
+    if USE_ZERO_SPLIT:
+        for state_col in ["short_zero", "long_zero"]:
+            for window in INVENTORY_WINDOWS:
+                mats["rolling"][f"{state_col}_{window}"] = rolling_sum_matrix(mats[state_col], window)
     return mats
 
 
 def inventory_row_values(cache, sku_idx, day_idx):
     b2b = float(cache["qty_b2b_hq_stock"][sku_idx, day_idx])
     storage = float(cache["qty_storage_stock"][sku_idx, day_idx])
-    total = b2b + storage
+    total = float(cache["qty_total_stock"][sku_idx, day_idx])
     return [
         b2b,
         storage,
@@ -311,8 +412,38 @@ def inventory_row_values(cache, sku_idx, day_idx):
         float(np.log1p(max(total, 0.0))),
         float(cache["has_b2b_snapshot"][sku_idx, day_idx]),
         float(cache["has_storage_snapshot"][sku_idx, day_idx]),
-        inventory_bucket(b2b),
-    ]
+        float(cache["snapshot_present"][sku_idx, day_idx]),
+        float(cache["stock_positive"][sku_idx, day_idx]),
+        float(cache["stock_zero"][sku_idx, day_idx]),
+        float(cache["rolling"]["snapshot_present_7"][sku_idx, day_idx]),
+        float(cache["rolling"]["snapshot_present_14"][sku_idx, day_idx]),
+        float(cache["rolling"]["snapshot_present_30"][sku_idx, day_idx]),
+        float(cache["rolling"]["stock_positive_7"][sku_idx, day_idx]),
+        float(cache["rolling"]["stock_positive_14"][sku_idx, day_idx]),
+        float(cache["rolling"]["stock_positive_30"][sku_idx, day_idx]),
+        float(cache["rolling"]["stock_zero_7"][sku_idx, day_idx]),
+        float(cache["rolling"]["stock_zero_14"][sku_idx, day_idx]),
+        float(cache["rolling"]["stock_zero_30"][sku_idx, day_idx]),
+        float(cache["days_since_last_snapshot"][sku_idx, day_idx]),
+        float(cache["days_since_last_stock_positive"][sku_idx, day_idx]),
+        float(cache["days_since_last_stock_zero"][sku_idx, day_idx]),
+        float(cache["stock_zero_streak"][sku_idx, day_idx]),
+        float(cache["positive_to_zero_switch"][sku_idx, day_idx]),
+        inventory_bucket(total),
+    ] + (
+        [
+            float(cache["short_zero"][sku_idx, day_idx]),
+            float(cache["long_zero"][sku_idx, day_idx]),
+            float(cache["rolling"]["short_zero_7"][sku_idx, day_idx]),
+            float(cache["rolling"]["short_zero_14"][sku_idx, day_idx]),
+            float(cache["rolling"]["short_zero_30"][sku_idx, day_idx]),
+            float(cache["rolling"]["long_zero_7"][sku_idx, day_idx]),
+            float(cache["rolling"]["long_zero_14"][sku_idx, day_idx]),
+            float(cache["rolling"]["long_zero_30"][sku_idx, day_idx]),
+        ]
+        if USE_ZERO_SPLIT
+        else []
+    )
 
 
 def main():
@@ -328,7 +459,9 @@ def main():
 
     print("=" * 72)
     print("[Phase8 event+inventory shadow] build v6_event extended shadow assets")
-    print(f"split_date={split_date} | output_tag={paths['output_tag']}")
+    print(
+        f"split_date={split_date} | output_tag={paths['output_tag']} | zero_split_mode={ZERO_SPLIT_MODE or 'none'}"
+    )
     print("=" * 72)
 
     with open(paths["base_artifacts"] / "meta_v6_event.json", "r", encoding="utf-8") as fh:
@@ -456,7 +589,7 @@ def main():
     pd.DataFrame(train_keys).to_csv(paths["out_artifacts"] / "train_keys.csv", index=False)
 
     meta = dict(base_meta)
-    meta["feature_version"] = "v6_event_inventory_shadow"
+    meta["feature_version"] = "v6_event_inventory_shadow" + ("_zero_split" if USE_ZERO_SPLIT else "")
     meta["feature_cols"] = list(base_meta["feature_cols"]) + EXTRA_COLS
     feature_groups = dict(base_meta["feature_groups"])
     feature_groups["event"] = EXTRA_COLS
@@ -466,6 +599,7 @@ def main():
     meta["shadow_base_tag"] = paths["base_tag"]
     meta["shadow_event_source"] = "data/phase8a_prep/event_intent_daily_features.csv"
     meta["shadow_inventory_source"] = "data/phase8a_prep/inventory_daily_features.csv"
+    meta["inventory_zero_split_mode"] = ZERO_SPLIT_MODE or "none"
     with open(paths["out_artifacts"] / "meta_v6_event.json", "w", encoding="utf-8") as fh:
         json.dump(meta, fh, ensure_ascii=False, indent=2)
 

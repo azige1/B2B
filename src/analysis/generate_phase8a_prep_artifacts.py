@@ -177,6 +177,16 @@ def build_inventory_daily_features(products):
     features["has_b2b_snapshot"] = pd.to_numeric(
         features["has_b2b_snapshot"], errors="coerce"
     ).fillna(0.0).astype(int)
+    features["qty_total_stock"] = features["qty_storage_stock"] + features["qty_b2b_hq_stock"]
+    features["snapshot_present"] = (
+        (features["has_storage_snapshot"] > 0) | (features["has_b2b_snapshot"] > 0)
+    ).astype(int)
+    features["stock_positive"] = (
+        (features["snapshot_present"] > 0) & (features["qty_total_stock"] > 0)
+    ).astype(int)
+    features["stock_zero"] = (
+        (features["snapshot_present"] > 0) & (features["qty_total_stock"] <= 0)
+    ).astype(int)
     features = features.sort_values(["date", "sku_id"]).reset_index(drop=True)
 
     product_skus = set(products["sku_id"].astype(str))

@@ -32,8 +32,22 @@
     "rank_corr_positive_skus": 0.7537976288389157,
     "1_3_ratio": 1.0955309919240002
   },
+  "zero_split_summary": {
+    "candidate_key": "event_inventory_zero_split",
+    "track": "cov_activity_tail_full_event",
+    "global_ratio": 1.0776625868870584,
+    "global_wmape": 0.6666524615124896,
+    "4_25_under_wape": 0.3311665219041364,
+    "4_25_sku_p50": 0.6974696876971482,
+    "ice_4_25_sku_p50": 0.6311703990541622,
+    "blockbuster_under_wape": 0.363503165428155,
+    "blockbuster_sku_p50": 0.633980478986567,
+    "top20_true_volume_capture": 0.5724558311421122,
+    "rank_corr_positive_skus": 0.7642492569920286,
+    "1_3_ratio": 1.0980442053547312
+  },
   "outputs": {
-    "anchor_table": "reports\\phase8_event_inventory_shadow_2026\\phase8_event_inventory_shadow_anchor_table.csv",
-    "summary_md": "reports\\phase8_event_inventory_shadow_2026\\phase8_event_inventory_shadow_summary.md"
+    "anchor_table": "reports\\phase8_inventory_zero_split_shadow_2026\\phase8_inventory_zero_split_anchor_table.csv",
+    "summary_md": "reports\\phase8_inventory_zero_split_shadow_2026\\phase8_inventory_zero_split_summary.md"
   }
 }

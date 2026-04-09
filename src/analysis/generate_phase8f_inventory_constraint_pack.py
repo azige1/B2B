@@ -1,5 +1,4 @@
 import json
-import os
 from pathlib import Path
 
 import numpy as np
@@ -31,13 +30,33 @@ def markdown_table(df, columns):
     for _, row in df[columns].iterrows():
         vals = []
         for col in columns:
-            v = row[col]
-            if isinstance(v, float):
-                vals.append("" if np.isnan(v) else f"{v:.4f}")
+            value = row[col]
+            if isinstance(value, float):
+                vals.append("" if np.isnan(value) else f"{value:.4f}")
             else:
-                vals.append(str(v))
+                vals.append(str(value))
         rows.append("| " + " | ".join(vals) + " |")
     return "\n".join([headers, sep, *rows])
+
+
+def ensure_inventory_state_columns(df):
+    if "snapshot_present" not in df.columns:
+        df["snapshot_present"] = (
+            (df["has_storage_snapshot"] > 0) | (df["has_b2b_snapshot"] > 0)
+        ).astype(int)
+    if "stock_positive" not in df.columns:
+        df["stock_positive"] = (
+            (df["snapshot_present"] > 0) & (df["inv_total_stock"] > 0)
+        ).astype(int)
+    if "stock_zero" not in df.columns:
+        df["stock_zero"] = (
+            (df["snapshot_present"] > 0) & (df["inv_total_stock"] <= 0)
+        ).astype(int)
+
+    df["stock_state"] = "no_snapshot"
+    df.loc[df["stock_zero"] > 0, "stock_state"] = "snapshot_zero_stock"
+    df.loc[df["stock_positive"] > 0, "stock_state"] = "snapshot_positive_stock"
+    return df
 
 
 def load_row_compare():
@@ -55,6 +74,9 @@ def load_row_compare():
         "inv_total_stock",
         "has_storage_snapshot",
         "has_b2b_snapshot",
+        "snapshot_present",
+        "stock_positive",
+        "stock_zero",
         "base_zero_true_fp",
         "shadow_zero_true_fp",
     ]
@@ -62,13 +84,7 @@ def load_row_compare():
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0.0)
 
-    df["has_any_snapshot"] = (
-        (df["has_storage_snapshot"] > 0) | (df["has_b2b_snapshot"] > 0)
-    ).astype(int)
-    df["stock_state"] = "no_stock_signal"
-    df.loc[df["has_any_snapshot"] == 1, "stock_state"] = "snapshot_zero_stock"
-    df.loc[df["inv_total_stock"] > 0, "stock_state"] = "snapshot_positive_stock"
-
+    df = ensure_inventory_state_columns(df)
     df["base_under_gap"] = (
         df["true_replenish_qty"] - df["base_pred_qty"]
     ).clip(lower=0.0)
@@ -137,7 +153,7 @@ def build_stock_constrained_candidates(df):
         | (zero["qty_first_order"] >= 25)
     ).astype(int)
     candidates = zero[
-        (zero["stock_state"] == "no_stock_signal")
+        (zero["stock_state"] == "no_snapshot")
         & (zero["demand_risk_signal"] == 1)
     ].copy()
     candidates = candidates.sort_values(
@@ -165,26 +181,52 @@ def build_stock_constrained_candidates(df):
         "event_daily_pay_success_30",
         "stock_state",
         "inv_total_stock",
+        "snapshot_present",
+        "stock_positive",
+        "stock_zero",
     ]
-    cols = [c for c in cols if c in candidates.columns]
+    cols = [col for col in cols if col in candidates.columns]
     return candidates[cols].head(200).reset_index(drop=True)
 
 
 def build_inventory_source_audit():
     inv = pd.read_csv(DATA_DIR / "inventory_daily_features.csv", encoding="utf-8-sig")
-    for col in ["qty_storage_stock", "qty_b2b_hq_stock"]:
-        inv[col] = pd.to_numeric(inv[col], errors="coerce").fillna(0.0)
+    for col in [
+        "qty_storage_stock",
+        "qty_b2b_hq_stock",
+        "qty_total_stock",
+        "snapshot_present",
+        "stock_positive",
+        "stock_zero",
+    ]:
+        if col in inv.columns:
+            inv[col] = pd.to_numeric(inv[col], errors="coerce").fillna(0.0)
     inv["date"] = pd.to_datetime(inv["date"])
 
     wide = pd.read_csv(
         WIDE_PATH,
-        usecols=["date", "qty_stock", "is_real_stock"],
+        usecols=lambda col: col
+        in {
+            "date",
+            "qty_stock",
+            "is_real_stock",
+            "snapshot_present",
+            "stock_positive",
+            "stock_zero",
+        },
         encoding="utf-8-sig",
     )
     wide["date"] = pd.to_datetime(wide["date"])
     wide = wide[wide["date"] >= pd.Timestamp("2026-01-23")].copy()
-    for col in ["qty_stock", "is_real_stock"]:
-        wide[col] = pd.to_numeric(wide[col], errors="coerce").fillna(0.0)
+    for col in [
+        "qty_stock",
+        "is_real_stock",
+        "snapshot_present",
+        "stock_positive",
+        "stock_zero",
+    ]:
+        if col in wide.columns:
+            wide[col] = pd.to_numeric(wide[col], errors="coerce").fillna(0.0)
 
     return {
         "inventory_daily_rows": int(len(inv)),
@@ -192,42 +234,41 @@ def build_inventory_source_audit():
         "inventory_dup_date_sku_rows": int(inv.duplicated(["date", "sku_id"]).sum()),
         "inventory_storage_zero_rows": int((inv["qty_storage_stock"] == 0).sum()),
         "inventory_b2b_zero_rows": int((inv["qty_b2b_hq_stock"] == 0).sum()),
+        "inventory_snapshot_present_rows": int(inv.get("snapshot_present", pd.Series(dtype=float)).sum()),
+        "inventory_stock_zero_rows": int(inv.get("stock_zero", pd.Series(dtype=float)).sum()),
         "wide_rows_after_20260123": int(len(wide)),
         "wide_qty_stock_gt_0_rate": safe_rate((wide["qty_stock"] > 0).sum(), len(wide)),
         "wide_is_real_stock_rate": safe_rate((wide["is_real_stock"] > 0).sum(), len(wide)),
+        "wide_snapshot_present_rate": safe_rate(wide.get("snapshot_present", pd.Series(dtype=float)).sum(), len(wide)),
+        "wide_stock_zero_rate": safe_rate(wide.get("stock_zero", pd.Series(dtype=float)).sum(), len(wide)),
     }
 
 
-def write_summary(zero_df, pos_df, candidates, audit):
-    no_signal_row = zero_df.loc[zero_df["stock_state"] == "no_stock_signal"]
-    positive_row = zero_df.loc[zero_df["stock_state"] == "snapshot_positive_stock"]
-    no_signal_note = ""
-    positive_note = ""
-    if not no_signal_row.empty:
-        r = no_signal_row.iloc[0]
-        no_signal_note = (
-            f"- `true=0` 且 `no_stock_signal` 的行共有 `{int(r['rows'])}`，"
-            f"`base_fp_rate={r['base_fp_rate']:.4f}`，`shadow_fp_rate={r['shadow_fp_rate']:.4f}`。"
-        )
-    if not positive_row.empty:
-        r = positive_row.iloc[0]
-        positive_note = (
-            f"- `true=0` 且 `snapshot_positive_stock` 的行共有 `{int(r['rows'])}`，"
-            f"`base_fp_rate={r['base_fp_rate']:.4f}`，`shadow_fp_rate={r['shadow_fp_rate']:.4f}`。"
-        )
+def build_state_note(zero_df, state_name):
+    sub = zero_df.loc[zero_df["stock_state"] == state_name]
+    if sub.empty:
+        return ""
+    row = sub.iloc[0]
+    return (
+        f"- `true=0` rows with `{state_name}`: `{int(row['rows'])}`, "
+        f"`base_fp_rate={row['base_fp_rate']:.4f}`, "
+        f"`shadow_fp_rate={row['shadow_fp_rate']:.4f}`."
+    )
 
+
+def write_summary(zero_df, pos_df, candidates, audit):
     lines = [
         "# Phase8 Inventory Constraint 2026 Summary",
         "",
         "- Status: `analysis_only`",
         "- Source: `phase8_event_inventory_shadow_2026/phase8_event_inventory_shadow_row_compare.csv`",
-        "- Purpose: assess whether current inventory-aware shadow can distinguish `true=0` rows that may be stock-constrained rather than true no-demand.",
+        "- Purpose: inspect whether the 2026 event+inventory shadow behaves differently across `no_snapshot`, `snapshot_zero_stock`, and `snapshot_positive_stock`.",
         "",
         "## Bottom Line",
         "",
-        "- 当前正式 `phase7` 主线仍然不能识别库存约束，因为它没有使用库存特征。",
-        "- `event + inventory` 影子线已经能利用**正库存信号**改善预测，但还不能严格识别“明确缺货导致未补货”。",
-        "- 原因是当前库存特征表没有保留“存在快照但库存为 0”的独立状态；`snapshot_zero_stock` 在影子明细里为 0 行。",
+        "- This pack does not change the official phase7 mainline.",
+        "- Inventory states are now evaluated explicitly instead of inferring zero stock from presence flags.",
+        "- The practical question is whether `snapshot_zero_stock` behaves differently from `no_snapshot` after the semantic fix.",
         "",
         "## Zero-True by Stock State",
         "",
@@ -245,8 +286,9 @@ def write_summary(zero_df, pos_df, candidates, audit):
             ],
         ),
         "",
-        no_signal_note,
-        positive_note,
+        build_state_note(zero_df, "no_snapshot"),
+        build_state_note(zero_df, "snapshot_zero_stock"),
+        build_state_note(zero_df, "snapshot_positive_stock"),
         "",
         "## Positive-True Under-Predict by Stock State",
         "",
@@ -271,20 +313,24 @@ def write_summary(zero_df, pos_df, candidates, audit):
         f"- duplicate `date+sku` rows in inventory_daily_features: `{audit['inventory_dup_date_sku_rows']}`",
         f"- inventory rows with `qty_storage_stock = 0`: `{audit['inventory_storage_zero_rows']}`",
         f"- inventory rows with `qty_b2b_hq_stock = 0`: `{audit['inventory_b2b_zero_rows']}`",
+        f"- inventory rows with `snapshot_present = 1`: `{audit['inventory_snapshot_present_rows']}`",
+        f"- inventory rows with `stock_zero = 1`: `{audit['inventory_stock_zero_rows']}`",
         f"- wide `qty_stock > 0` rate after `2026-01-23`: `{audit['wide_qty_stock_gt_0_rate']:.4f}`",
         f"- wide `is_real_stock > 0` rate after `2026-01-23`: `{audit['wide_is_real_stock_rate']:.4f}`",
+        f"- wide `snapshot_present = 1` rate after `2026-01-23`: `{audit['wide_snapshot_present_rate']:.4f}`",
+        f"- wide `stock_zero = 1` rate after `2026-01-23`: `{audit['wide_stock_zero_rate']:.4f}`",
         "",
         "## Interpretation",
         "",
-        "- `snapshot_positive_stock` 可以被识别，这也是 `event + inventory` 影子线在 2026 两锚点上明显改善的原因之一。",
-        "- `no_stock_signal` 目前不能直接解释成缺货。它可能是：没有快照、快照漏匹配、或真实 0 库存被当前 presence 逻辑吞掉。",
-        "- 因为 `snapshot_zero_stock` 为 0 行，当前还不能回答“明确有快照且库存为 0 时模型怎么判断”。",
+        "- `snapshot_positive_stock` captures rows with explicit inventory support.",
+        "- `snapshot_zero_stock` captures rows where a snapshot exists but total stock is zero or below.",
+        "- `no_snapshot` now means missing snapshot evidence, not zero stock by default.",
         "",
         "## Practical Answer",
         "",
-        "- 现在模型**能部分区分**“有库存支撑的需求”和“无库存信号的样本”。",
-        "- 现在模型**还不能严格区分**“没补货是因为缺货”与“没补货是因为真没需求”。",
-        "- 如果要把这件事做严，需要下一步修库存特征生成逻辑，保留**原始快照存在性**与**0 库存状态**，而不是把 presence 直接定义成 `qty > 0`。",
+        "- If `snapshot_zero_stock` now shows a distinct error pattern from `no_snapshot`, the inventory line is carrying more than a pure positive-stock signal.",
+        "- If the gains still sit almost entirely in `snapshot_positive_stock`, most of the lift is coming from positive-stock evidence.",
+        f"- Candidate `true=0` demand-risk rows exported for follow-up: `{len(candidates)}`.",
         "",
         "## Output Files",
         "",
@@ -294,7 +340,7 @@ def write_summary(zero_df, pos_df, candidates, audit):
         "",
     ]
     (REPORT_DIR / "phase8_inventory_constraint_summary.md").write_text(
-        "\n".join(lines),
+        "\n".join(line for line in lines if line is not None),
         encoding="utf-8-sig",
     )
 

@@ -34,7 +34,16 @@ def load_inventory_features():
 
         df['date'] = pd.to_datetime(df['date'])
         df['sku_id'] = df['sku_id'].astype(str).str.strip()
-        for col in ['qty_storage_stock', 'qty_b2b_hq_stock', 'has_storage_snapshot', 'has_b2b_snapshot']:
+        for col in [
+            'qty_storage_stock',
+            'qty_b2b_hq_stock',
+            'has_storage_snapshot',
+            'has_b2b_snapshot',
+            'qty_total_stock',
+            'snapshot_present',
+            'stock_positive',
+            'stock_zero',
+        ]:
             if col in df.columns:
                 df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0)
             else:
@@ -48,12 +57,31 @@ def load_inventory_features():
                 'qty_b2b_hq_stock': 'max',
                 'has_storage_snapshot': 'max',
                 'has_b2b_snapshot': 'max',
+                'qty_total_stock': 'max',
+                'snapshot_present': 'max',
+                'stock_positive': 'max',
+                'stock_zero': 'max',
             })
         )
-        df['qty_stock'] = df['qty_storage_stock'] + df['qty_b2b_hq_stock']
-        df['is_real_stock'] = (
-            (df['has_storage_snapshot'] > 0) | (df['has_b2b_snapshot'] > 0)
-        ).astype(int)
+        if (df['qty_total_stock'] == 0).all():
+            df['qty_total_stock'] = df['qty_storage_stock'] + df['qty_b2b_hq_stock']
+        df['snapshot_present'] = np.where(
+            df['snapshot_present'] > 0,
+            1,
+            ((df['has_storage_snapshot'] > 0) | (df['has_b2b_snapshot'] > 0)).astype(int),
+        )
+        df['stock_positive'] = np.where(
+            df['stock_positive'] > 0,
+            1,
+            ((df['snapshot_present'] > 0) & (df['qty_total_stock'] > 0)).astype(int),
+        )
+        df['stock_zero'] = np.where(
+            df['stock_zero'] > 0,
+            1,
+            ((df['snapshot_present'] > 0) & (df['qty_total_stock'] <= 0)).astype(int),
+        )
+        df['qty_stock'] = df['qty_total_stock']
+        df['is_real_stock'] = df['snapshot_present'].astype(int)
         print_log(
             f"   -> 使用 phase8a 库存特征: {os.path.basename(inventory_path)} | 行数: {len(df)}"
         )
@@ -73,9 +101,13 @@ def load_inventory_features():
         )
         df['qty_storage_stock'] = df['qty_stock']
         df['qty_b2b_hq_stock'] = 0.0
-        df['has_storage_snapshot'] = (df['qty_stock'] > 0).astype(int)
+        df['has_storage_snapshot'] = 1
         df['has_b2b_snapshot'] = 0
-        df['is_real_stock'] = df['has_storage_snapshot']
+        df['qty_total_stock'] = df['qty_stock']
+        df['snapshot_present'] = 1
+        df['stock_positive'] = (df['qty_total_stock'] > 0).astype(int)
+        df['stock_zero'] = (df['qty_total_stock'] <= 0).astype(int)
+        df['is_real_stock'] = df['snapshot_present']
         print_log(
             f"   -> 回退使用 clean_inventory.csv | 行数: {len(df)}"
         )
@@ -240,6 +272,10 @@ def build_wide_table():
             'qty_b2b_hq_stock',
             'has_storage_snapshot',
             'has_b2b_snapshot',
+            'qty_total_stock',
+            'snapshot_present',
+            'stock_positive',
+            'stock_zero',
             'qty_stock',
             'is_real_stock',
         ]
@@ -254,6 +290,10 @@ def build_wide_table():
             'qty_b2b_hq_stock',
             'has_storage_snapshot',
             'has_b2b_snapshot',
+            'qty_total_stock',
+            'snapshot_present',
+            'stock_positive',
+            'stock_zero',
             'qty_stock',
             'is_real_stock',
         ]:
@@ -263,6 +303,10 @@ def build_wide_table():
         df_main['qty_b2b_hq_stock'] = 0
         df_main['has_storage_snapshot'] = 0
         df_main['has_b2b_snapshot'] = 0
+        df_main['qty_total_stock'] = 0
+        df_main['snapshot_present'] = 0
+        df_main['stock_positive'] = 0
+        df_main['stock_zero'] = 0
         df_main['qty_stock'] = 0
         df_main['is_real_stock'] = 0
 

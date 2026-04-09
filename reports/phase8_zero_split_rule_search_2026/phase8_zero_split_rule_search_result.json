@@ -1,0 +1,56 @@
+{
+  "status": "analysis_only_shadow",
+  "baseline_summary": {
+    "short_zero_scale": 1.0,
+    "short_zero_signal_scale": 1.0,
+    "long_zero_scale": 1.0,
+    "long_zero_signal_scale": 1.0,
+    "mean_global_wmape": 0.6666524615124896,
+    "mean_4_25_under_wape": 0.3311665219041364,
+    "mean_blockbuster_under_wape": 0.363503165428155,
+    "mean_rank_corr_positive_skus": 0.7642492569920286,
+    "mean_top20_true_volume_capture": 0.5724558311421122,
+    "short_zero_zero_true_fp_rate": 0.5,
+    "short_zero_positive_true_under_wape": 0.21171470756123956,
+    "long_zero_zero_true_fp_rate": 0.7394366197183099,
+    "long_zero_positive_true_under_wape": 0.1612165558961882,
+    "other_zero_true_fp_rate": 0.16793609511424856,
+    "other_positive_true_under_wape": 0.2986038501117336
+  },
+  "best_rule_summary": {
+    "short_zero_scale": 0.8,
+    "short_zero_signal_scale": 0.9,
+    "long_zero_scale": 0.4,
+    "long_zero_signal_scale": 0.75,
+    "mean_global_wmape": 0.664010723656933,
+    "mean_4_25_under_wape": 0.3314798764722009,
+    "mean_blockbuster_under_wape": 0.363503165428155,
+    "mean_rank_corr_positive_skus": 0.7637931710051111,
+    "mean_top20_true_volume_capture": 0.5721664818703708,
+    "short_zero_zero_true_fp_rate": 0.5,
+    "short_zero_positive_true_under_wape": 0.2619718191955051,
+    "long_zero_zero_true_fp_rate": 0.7394366197183099,
+    "long_zero_positive_true_under_wape": 0.356676512337544,
+    "other_zero_true_fp_rate": 0.16793609511424856,
+    "other_positive_true_under_wape": 0.2986038501117336
+  },
+  "best_rule_params": {
+    "short_zero_scale": 0.8,
+    "short_zero_signal_scale": 0.9,
+    "long_zero_scale": 0.4,
+    "long_zero_signal_scale": 0.75
+  },
+  "best_rule_selector": {
+    "candidate_id": "rule_009",
+    "mean_global_wmape": 0.664010723656933,
+    "long_zero_zero_true_fp_rate": 0.7394366197183099,
+    "long_zero_positive_true_under_wape": 0.356676512337544
+  },
+  "outputs": {
+    "candidates": "reports/phase8_zero_split_rule_search_2026/phase8_zero_split_rule_search_candidates.csv",
+    "anchor_eval": "reports/phase8_zero_split_rule_search_2026/phase8_zero_split_rule_search_anchor_eval.csv",
+    "state_eval": "reports/phase8_zero_split_rule_search_2026/phase8_zero_split_rule_search_state_eval.csv",
+    "cases": "reports/phase8_zero_split_rule_search_2026/phase8_zero_split_rule_search_cases.csv",
+    "summary": "reports/phase8_zero_split_rule_search_2026/phase8_zero_split_rule_search_summary.md"
+  }
+}
