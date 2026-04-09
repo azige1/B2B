@@ -76,3 +76,9 @@ If a large file is important for reproducibility, record its path and generation
 2. Check that no large generated artifacts were picked up by mistake.
 3. Confirm that current-facing docs still point to the right official mainline.
 4. If code changed, include a short note in the commit or adjacent doc about why.
+
+Recommended local check:
+
+```bash
+python scripts/diagnostic/check_git_hygiene.py
+```
