@@ -14,6 +14,7 @@ from .builders import (
     PredictionColumnSpec,
     build_economics_config,
     build_inventory_snapshot,
+    infer_prediction_column_spec,
     load_policy_defaults,
     normalize_prediction_snapshot,
 )
@@ -36,6 +37,7 @@ __all__ = [
     "assess_replenishment_plan",
     "recommend_replenishment_plans",
     "PredictionColumnSpec",
+    "infer_prediction_column_spec",
     "normalize_prediction_snapshot",
     "load_policy_defaults",
     "build_inventory_snapshot",

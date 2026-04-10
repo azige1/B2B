@@ -45,6 +45,8 @@ If you need the current proposal for the second project module, also read:
   - `python modules/profit_analysis/scripts/run_profit_analysis_snapshot.py`
 - Profit analysis input builder:
   - `python modules/profit_analysis/scripts/build_profit_analysis_inputs.py --prediction-csv <your_prediction_csv>`
+- Profit analysis prediction normalizer:
+  - `python modules/profit_analysis/scripts/normalize_prediction_snapshot.py --source-csv <your_raw_prediction_csv>`
 
 ## Document Roles
 

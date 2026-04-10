@@ -43,6 +43,43 @@ class PredictionColumnSpec:
     prediction_version: str | None = None
 
 
+def infer_prediction_column_spec(
+    prediction_df: pd.DataFrame,
+    prediction_version: str | None = None,
+) -> PredictionColumnSpec:
+    column_sets = {
+        "sku_id_col": ["sku_id", "SKU_ID"],
+        "snapshot_date_col": ["snapshot_date", "anchor_date", "date"],
+        "prob_col": ["pred_prob_positive", "ai_pred_prob", "pred_prob", "prob"],
+        "qty_col": ["pred_qty_30d", "ai_pred_qty", "pred_qty", "qty_pred"],
+        "prediction_version_col": ["prediction_version", "exp_id", "model_id"],
+    }
+
+    resolved: dict[str, str | None] = {}
+    cols = set(prediction_df.columns)
+    for key, candidates in column_sets.items():
+        match = next((name for name in candidates if name in cols), None)
+        resolved[key] = match
+
+    required_keys = ["sku_id_col", "snapshot_date_col", "prob_col", "qty_col"]
+    missing = [key for key in required_keys if not resolved.get(key)]
+    if missing:
+        raise ValueError(
+            "Could not infer prediction columns automatically. "
+            f"Missing mappings for: {missing}. "
+            f"Available columns: {list(prediction_df.columns)}"
+        )
+
+    return PredictionColumnSpec(
+        sku_id_col=str(resolved["sku_id_col"]),
+        snapshot_date_col=str(resolved["snapshot_date_col"]),
+        prob_col=str(resolved["prob_col"]),
+        qty_col=str(resolved["qty_col"]),
+        prediction_version_col=resolved["prediction_version_col"],
+        prediction_version=prediction_version,
+    )
+
+
 def load_policy_defaults(path: str | Path) -> pd.DataFrame:
     df = pd.read_csv(path)
     required = ["scope_type", "scope_key"]

@@ -253,6 +253,8 @@ That will allow implementation of the first executable `Assess` function without
 
 The repository now has a first prototype path for this module:
 
+- prediction normalizer:
+  - [normalize_prediction_snapshot.py](/E:/LSTM/B2B/B2B_Replenishment_System/modules/profit_analysis/scripts/normalize_prediction_snapshot.py)
 - input builder:
   - [build_profit_analysis_inputs.py](/E:/LSTM/B2B/B2B_Replenishment_System/modules/profit_analysis/scripts/build_profit_analysis_inputs.py)
 - execution script:
@@ -274,3 +276,7 @@ Prototype run example:
 Input build example:
 
 `python modules/profit_analysis/scripts/build_profit_analysis_inputs.py --prediction-csv <your_prediction_csv>`
+
+Prediction normalize example:
+
+`python modules/profit_analysis/scripts/normalize_prediction_snapshot.py --source-csv <your_raw_prediction_csv>`

@@ -39,9 +39,11 @@ It is designed to sit downstream of the current tree-based replenishment model.
 
 ## Current Workflow
 
-1. Normalize or build three input snapshots through:
-   - `python modules/profit_analysis/scripts/build_profit_analysis_inputs.py --prediction-csv <your_prediction_csv>`
-2. Run the profit-analysis prototype on the normalized snapshots:
+1. If your upstream file is still a raw eval/detail CSV, normalize it first:
+   - `python modules/profit_analysis/scripts/normalize_prediction_snapshot.py --source-csv <your_raw_prediction_csv>`
+2. Normalize or build three input snapshots through:
+   - `python modules/profit_analysis/scripts/build_profit_analysis_inputs.py --prediction-csv <your_prediction_snapshot_csv>`
+3. Run the profit-analysis prototype on the normalized snapshots:
    - `python modules/profit_analysis/scripts/run_profit_analysis_snapshot.py`
 
 ## Notes
