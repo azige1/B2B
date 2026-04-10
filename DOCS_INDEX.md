@@ -14,7 +14,7 @@ These five files are the canonical current entry points.
 
 If you need the current proposal for the second project module, also read:
 
-6. `reports/current/盈亏分析模块V1技术方案_20260410.md`
+6. `modules/profit_analysis/docs/盈亏分析模块V1技术方案_20260410.md`
 
 ## Current Official State
 
@@ -41,6 +41,8 @@ If you need the current proposal for the second project module, also read:
   - `python scripts/runners/phase8/run_phase8a_prep.py`
 - Phase8 inventory constraint pack:
   - `python scripts/runners/phase8/run_phase8f_inventory_constraint_pack.py`
+- Profit analysis prototype:
+  - `python modules/profit_analysis/scripts/run_profit_analysis_snapshot.py`
 
 ## Document Roles
 
@@ -52,8 +54,12 @@ If you need the current proposal for the second project module, also read:
   - current official freeze explanation
 - `reports/current/phase8_restart_playbook_20260409.md`
   - phase8 restart conditions and replay entry points
-- `reports/current/盈亏分析模块V1技术方案_20260410.md`
+- `modules/profit_analysis/docs/盈亏分析模块V1技术方案_20260410.md`
   - current recommended Chinese V1 design for the profit analysis module
+- `modules/profit_analysis/docs/profit_analysis_data_mapping_20260410.md`
+  - current field-to-data-source mapping for profit analysis V1
+- `modules/profit_analysis/README.md`
+  - module-local index for profit-analysis code, docs, configs, and scripts
 - `盈亏分析模块V1技术方案.md`
   - root-level shortcut for the current profit-analysis proposal
 - `PROJECT_OVERVIEW.md`

@@ -1,0 +1,2 @@
+sku_id,snapshot_date,pred_prob_positive,pred_qty_30d,prediction_version
+TEST_SKU,2026-04-10,0.72,40.0,phase7_demo

@@ -14,7 +14,9 @@
 - Mainline metadata: `reports/current/current_mainline.json`
 - Freeze summary: `reports/current/current_freeze_summary.md`
 - Phase8 restart playbook: `reports/current/phase8_restart_playbook_20260409.md`
-- Profit analysis module V1 proposal: `reports/current/盈亏分析模块V1技术方案_20260410.md`
+- Profit analysis module V1 proposal: `modules/profit_analysis/docs/盈亏分析模块V1技术方案_20260410.md`
+- Profit analysis data mapping: `modules/profit_analysis/docs/profit_analysis_data_mapping_20260410.md`
+- Profit analysis module home: `modules/profit_analysis/README.md`
 - Root shortcut: `盈亏分析模块V1技术方案.md`
 - Official December compare page: `reports/current/current_model_compare.html`
 - Official December compare CSV: `reports/current/current_model_compare.csv`

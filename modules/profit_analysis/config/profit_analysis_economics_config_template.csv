@@ -1,0 +1,2 @@
+sku_id,unit_cost,unit_price,holding_cost_per_unit_per_day,salvage_value_per_unit,stockout_penalty_per_unit,other_fixed_cost,lifecycle_end_date
+TEST_SKU,50.0,120.0,0.2,20.0,10.0,0.0,2026-07-31
