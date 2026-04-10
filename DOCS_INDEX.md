@@ -12,6 +12,10 @@ If you only need the current official state, read these in order:
 
 These five files are the canonical current entry points.
 
+If you need the current proposal for the second project module, also read:
+
+6. `reports/current/盈亏分析模块V1技术方案_20260410.md`
+
 ## Current Official State
 
 - Official phase: `phase7`
@@ -48,6 +52,10 @@ These five files are the canonical current entry points.
   - current official freeze explanation
 - `reports/current/phase8_restart_playbook_20260409.md`
   - phase8 restart conditions and replay entry points
+- `reports/current/盈亏分析模块V1技术方案_20260410.md`
+  - current recommended Chinese V1 design for the profit analysis module
+- `盈亏分析模块V1技术方案.md`
+  - root-level shortcut for the current profit-analysis proposal
 - `PROJECT_OVERVIEW.md`
   - broader project background; useful, but not the current canonical state page
 - `REPO_MAP.md`
