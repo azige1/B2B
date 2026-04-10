@@ -257,6 +257,8 @@ The repository now has a first prototype path for this module:
   - [normalize_prediction_snapshot.py](/E:/LSTM/B2B/B2B_Replenishment_System/modules/profit_analysis/scripts/normalize_prediction_snapshot.py)
 - input builder:
   - [build_profit_analysis_inputs.py](/E:/LSTM/B2B/B2B_Replenishment_System/modules/profit_analysis/scripts/build_profit_analysis_inputs.py)
+- backtest script:
+  - [backtest_profit_analysis.py](/E:/LSTM/B2B/B2B_Replenishment_System/modules/profit_analysis/scripts/backtest_profit_analysis.py)
 - execution script:
   - [run_profit_analysis_snapshot.py](/E:/LSTM/B2B/B2B_Replenishment_System/modules/profit_analysis/scripts/run_profit_analysis_snapshot.py)
 - input templates:
@@ -280,3 +282,7 @@ Input build example:
 Prediction normalize example:
 
 `python modules/profit_analysis/scripts/normalize_prediction_snapshot.py --source-csv <your_raw_prediction_csv>`
+
+Backtest example:
+
+`python modules/profit_analysis/scripts/backtest_profit_analysis.py --source-csv <your_raw_prediction_csv>`

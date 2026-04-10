@@ -80,6 +80,24 @@ def infer_prediction_column_spec(
     )
 
 
+def infer_actual_qty_col(prediction_df: pd.DataFrame) -> str:
+    candidates = [
+        "true_replenish_qty",
+        "actual_qty_30d",
+        "true_qty",
+        "actual_qty",
+        "qty_true",
+    ]
+    cols = set(prediction_df.columns)
+    match = next((name for name in candidates if name in cols), None)
+    if not match:
+        raise ValueError(
+            "Could not infer actual demand column automatically. "
+            f"Available columns: {list(prediction_df.columns)}"
+        )
+    return match
+
+
 def load_policy_defaults(path: str | Path) -> pd.DataFrame:
     df = pd.read_csv(path)
     required = ["scope_type", "scope_key"]

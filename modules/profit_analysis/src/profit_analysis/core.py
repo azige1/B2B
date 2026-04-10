@@ -170,6 +170,23 @@ class ProfitAssessment:
         return asdict(self)
 
 
+@dataclass(frozen=True)
+class RealizedPlanResult:
+    sku_id: str
+    plan_qty: float
+    actual_demand_qty: float
+    realized_profit: float
+    sold_qty: float
+    leftover_qty: float
+    lost_sales_qty: float
+    stockout_flag: int
+    sell_through_rate: float
+    arrival_offset_days: float
+
+    def to_dict(self) -> dict:
+        return asdict(self)
+
+
 def build_default_demand_scenarios(
     model_output: ModelOutput,
     positive_multipliers: Sequence[float] = (0.6, 1.0, 1.5),
@@ -343,6 +360,54 @@ def assess_replenishment_plan(
         expected_lost_sales_qty=float(expected_lost_sales_qty),
         sell_through_rate=float(sell_through_rate),
         scenario_breakdown=scenario_breakdown,
+    )
+
+
+def realize_replenishment_plan(
+    model_output: ModelOutput,
+    inventory_state: InventoryState,
+    economics: Economics,
+    plan: CandidatePlan,
+    actual_demand_qty: float,
+    horizon_days: int = 30,
+) -> RealizedPlanResult:
+    model_output = model_output.normalized()
+    inventory_state = inventory_state.normalized()
+    economics = economics.normalized()
+
+    arrival_day = _estimate_arrival_day(
+        snapshot_date=_coerce_date(inventory_state.snapshot_date) or date.today(),
+        lead_time_days=inventory_state.lead_time_days,
+    )
+    plan_qty = _round_to_batch(plan.plan_qty, inventory_state.min_batch_qty)
+    if inventory_state.max_replenish_qty is not None:
+        plan_qty = min(plan_qty, inventory_state.max_replenish_qty)
+    normalized_plan = CandidatePlan(
+        plan_qty=plan_qty,
+        arrival_day=plan.arrival_day or arrival_day,
+        policy=plan.policy,
+    ).normalized(default_arrival_day=arrival_day)
+
+    result = _simulate_scenario(
+        demand_qty=_non_negative(actual_demand_qty),
+        inventory_state=inventory_state,
+        economics=economics,
+        plan=normalized_plan,
+        horizon_days=horizon_days,
+    )
+    total_available = inventory_state.current_inventory + inventory_state.inbound_within_30d + normalized_plan.plan_qty
+    sell_through_rate = result["sold_qty"] / max(total_available, 1e-9)
+    return RealizedPlanResult(
+        sku_id=model_output.sku_id,
+        plan_qty=float(normalized_plan.plan_qty),
+        actual_demand_qty=float(_non_negative(actual_demand_qty)),
+        realized_profit=float(result["profit"]),
+        sold_qty=float(result["sold_qty"]),
+        leftover_qty=float(result["leftover_qty"]),
+        lost_sales_qty=float(result["lost_sales_qty"]),
+        stockout_flag=int(result["lost_sales_qty"] > 0),
+        sell_through_rate=float(sell_through_rate),
+        arrival_offset_days=float(result["arrival_offset_days"]),
     )
 
 

@@ -45,6 +45,8 @@ It is designed to sit downstream of the current tree-based replenishment model.
    - `python modules/profit_analysis/scripts/build_profit_analysis_inputs.py --prediction-csv <your_prediction_snapshot_csv>`
 3. Run the profit-analysis prototype on the normalized snapshots:
    - `python modules/profit_analysis/scripts/run_profit_analysis_snapshot.py`
+4. Backtest the three strategy families against realized 30-day demand:
+   - `python modules/profit_analysis/scripts/backtest_profit_analysis.py --source-csv <your_raw_prediction_csv>`
 
 ## Notes
 
