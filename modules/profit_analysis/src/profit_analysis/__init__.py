@@ -10,6 +10,13 @@ from .core import (
     assess_replenishment_plan,
     recommend_replenishment_plans,
 )
+from .builders import (
+    PredictionColumnSpec,
+    build_economics_config,
+    build_inventory_snapshot,
+    load_policy_defaults,
+    normalize_prediction_snapshot,
+)
 from .io import (
     build_profit_input_frame,
     load_economics_config,
@@ -28,6 +35,11 @@ __all__ = [
     "build_default_demand_scenarios",
     "assess_replenishment_plan",
     "recommend_replenishment_plans",
+    "PredictionColumnSpec",
+    "normalize_prediction_snapshot",
+    "load_policy_defaults",
+    "build_inventory_snapshot",
+    "build_economics_config",
     "build_profit_input_frame",
     "load_economics_config",
     "load_inventory_snapshot",

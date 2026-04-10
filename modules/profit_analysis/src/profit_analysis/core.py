@@ -2,18 +2,26 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 from datetime import date, datetime
-from math import sqrt
+from math import isfinite, sqrt
 from typing import Iterable, Sequence
 
 
 def _coerce_date(value: date | datetime | str | None) -> date | None:
     if value is None:
         return None
+    try:
+        if value != value:
+            return None
+    except Exception:
+        pass
+    text = str(value).strip()
+    if text in {"", "<NA>", "nan", "NaT", "None"}:
+        return None
     if isinstance(value, datetime):
         return value.date()
     if isinstance(value, date):
         return value
-    return datetime.fromisoformat(str(value)).date()
+    return datetime.fromisoformat(text).date()
 
 
 def _clip_probability(value: float) -> float:
@@ -21,7 +29,23 @@ def _clip_probability(value: float) -> float:
 
 
 def _non_negative(value: float) -> float:
-    return max(float(value), 0.0)
+    try:
+        numeric = float(value)
+    except (TypeError, ValueError):
+        return 0.0
+    if not isfinite(numeric):
+        return 0.0
+    return max(numeric, 0.0)
+
+
+def _maybe_non_negative(value: float | None) -> float | None:
+    if value is None:
+        return None
+    text = str(value).strip()
+    if text in {"", "<NA>", "nan", "NaT", "None"}:
+        return None
+    numeric = _non_negative(value)
+    return numeric
 
 
 def _round_to_batch(qty: float, batch_qty: float | None) -> float:
@@ -69,9 +93,9 @@ class InventoryState:
             current_inventory=_non_negative(self.current_inventory),
             inbound_within_30d=_non_negative(self.inbound_within_30d),
             lead_time_days=max(int(self.lead_time_days), 0),
-            min_batch_qty=None if self.min_batch_qty is None else _non_negative(self.min_batch_qty),
-            max_replenish_qty=None if self.max_replenish_qty is None else _non_negative(self.max_replenish_qty),
-            safety_stock_qty=None if self.safety_stock_qty is None else _non_negative(self.safety_stock_qty),
+            min_batch_qty=_maybe_non_negative(self.min_batch_qty),
+            max_replenish_qty=_maybe_non_negative(self.max_replenish_qty),
+            safety_stock_qty=_maybe_non_negative(self.safety_stock_qty),
             last_decision_date=_coerce_date(self.last_decision_date),
         )
 

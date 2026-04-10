@@ -43,6 +43,8 @@ If you need the current proposal for the second project module, also read:
   - `python scripts/runners/phase8/run_phase8f_inventory_constraint_pack.py`
 - Profit analysis prototype:
   - `python modules/profit_analysis/scripts/run_profit_analysis_snapshot.py`
+- Profit analysis input builder:
+  - `python modules/profit_analysis/scripts/build_profit_analysis_inputs.py --prediction-csv <your_prediction_csv>`
 
 ## Document Roles
 

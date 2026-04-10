@@ -34,6 +34,15 @@ It is designed to sit downstream of the current tree-based replenishment model.
   - `modules/profit_analysis/docs/profit_analysis_data_mapping_20260410.md`
 - Prototype runner:
   - `python modules/profit_analysis/scripts/run_profit_analysis_snapshot.py`
+- Input builder:
+  - `python modules/profit_analysis/scripts/build_profit_analysis_inputs.py --prediction-csv <your_prediction_csv>`
+
+## Current Workflow
+
+1. Normalize or build three input snapshots through:
+   - `python modules/profit_analysis/scripts/build_profit_analysis_inputs.py --prediction-csv <your_prediction_csv>`
+2. Run the profit-analysis prototype on the normalized snapshots:
+   - `python modules/profit_analysis/scripts/run_profit_analysis_snapshot.py`
 
 ## Notes
 

@@ -253,16 +253,24 @@ That will allow implementation of the first executable `Assess` function without
 
 The repository now has a first prototype path for this module:
 
+- input builder:
+  - [build_profit_analysis_inputs.py](/E:/LSTM/B2B/B2B_Replenishment_System/modules/profit_analysis/scripts/build_profit_analysis_inputs.py)
 - execution script:
   - [run_profit_analysis_snapshot.py](/E:/LSTM/B2B/B2B_Replenishment_System/modules/profit_analysis/scripts/run_profit_analysis_snapshot.py)
 - input templates:
   - [profit_analysis_prediction_snapshot_template.csv](/E:/LSTM/B2B/B2B_Replenishment_System/modules/profit_analysis/config/profit_analysis_prediction_snapshot_template.csv)
   - [profit_analysis_inventory_snapshot_template.csv](/E:/LSTM/B2B/B2B_Replenishment_System/modules/profit_analysis/config/profit_analysis_inventory_snapshot_template.csv)
   - [profit_analysis_economics_config_template.csv](/E:/LSTM/B2B/B2B_Replenishment_System/modules/profit_analysis/config/profit_analysis_economics_config_template.csv)
+  - [profit_analysis_business_defaults_template.csv](/E:/LSTM/B2B/B2B_Replenishment_System/modules/profit_analysis/config/profit_analysis_business_defaults_template.csv)
 - core module:
   - [core.py](/E:/LSTM/B2B/B2B_Replenishment_System/modules/profit_analysis/src/profit_analysis/core.py)
   - [io.py](/E:/LSTM/B2B/B2B_Replenishment_System/modules/profit_analysis/src/profit_analysis/io.py)
+  - [builders.py](/E:/LSTM/B2B/B2B_Replenishment_System/modules/profit_analysis/src/profit_analysis/builders.py)
 
 Prototype run example:
 
 `python modules/profit_analysis/scripts/run_profit_analysis_snapshot.py`
+
+Input build example:
+
+`python modules/profit_analysis/scripts/build_profit_analysis_inputs.py --prediction-csv <your_prediction_csv>`
