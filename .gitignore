@@ -20,12 +20,17 @@ env/
 *.log
 *.tmp
 *.temp
+*.pid
+*.tar.gz
+*.zip
+*.sha256
 
 # Local vendored runtime dependencies
 .vendor_tree_backends/
 
 # Model artifacts
 models/
+models_phase*/
 models_phase8_event_shadow/
 models_phase8_event_inventory_shadow_2026/
 models_phase8_inventory_zero_split_shadow_2026/
@@ -33,11 +38,13 @@ models_phase8_zero_split_asym_train_2026/
 *.pth
 
 # Base data layers and generated feature assets
+data/incoming/
 data/raw/
 data/silver/*.csv
 data/gold/*.csv
 data/processed_*/
 data/artifacts_*/
+data/phase8_*/
 data/phase8a_prep/*.csv
 
 # Warehouse extracts and snapshots

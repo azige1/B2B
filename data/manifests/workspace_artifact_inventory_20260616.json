@@ -1,0 +1,884 @@
+{
+  "generated_at": "2026-06-16T17:47:12",
+  "directories": [
+    {
+      "path": "data",
+      "files": 1881,
+      "size_mb": 253805.26,
+      "category": "data_assets",
+      "recommendation": "Use data/DATA_INDEX.md and manifests; do not bulk commit generated data."
+    },
+    {
+      "path": "reports",
+      "files": 1935,
+      "size_mb": 1484.36,
+      "category": "reports_and_experiments",
+      "recommendation": "Commit curated current docs; leave generated exports ignored."
+    },
+    {
+      "path": "models_phase8_robust_oot",
+      "files": 270,
+      "size_mb": 880.69,
+      "category": "generated_model_artifact",
+      "recommendation": "Keep local or archive by manifest; do not commit binaries."
+    },
+    {
+      "path": "models_phase8_formal_stage2_20260614",
+      "files": 270,
+      "size_mb": 880.46,
+      "category": "generated_model_artifact",
+      "recommendation": "Keep local or archive by manifest; do not commit binaries."
+    },
+    {
+      "path": "data_warehouse",
+      "files": 763,
+      "size_mb": 546.71,
+      "category": "raw_snapshot_warehouse",
+      "recommendation": "Keep local snapshots with manifests; do not commit CSV extracts."
+    },
+    {
+      "path": ".vendor_tree_backends",
+      "files": 263,
+      "size_mb": 475.04,
+      "category": "tooling_or_cache",
+      "recommendation": "Usually local; commit only config files."
+    },
+    {
+      "path": "models_phase8_formal_stage1_20260614",
+      "files": 60,
+      "size_mb": 195.89,
+      "category": "generated_model_artifact",
+      "recommendation": "Keep local or archive by manifest; do not commit binaries."
+    },
+    {
+      "path": "models_phase8_formal_stage1b_20260614",
+      "files": 60,
+      "size_mb": 195.85,
+      "category": "generated_model_artifact",
+      "recommendation": "Keep local or archive by manifest; do not commit binaries."
+    },
+    {
+      "path": "models_phase8_event_core_robust_oot",
+      "files": 54,
+      "size_mb": 176.04,
+      "category": "generated_model_artifact",
+      "recommendation": "Keep local or archive by manifest; do not commit binaries."
+    },
+    {
+      "path": "models_phase8_2026_out_of_time",
+      "files": 54,
+      "size_mb": 136.19,
+      "category": "generated_model_artifact",
+      "recommendation": "Keep local or archive by manifest; do not commit binaries."
+    },
+    {
+      "path": "models_phase8_zero_split_asym_train_2026",
+      "files": 36,
+      "size_mb": 119.91,
+      "category": "generated_model_artifact",
+      "recommendation": "Keep local or archive by manifest; do not commit binaries."
+    },
+    {
+      "path": "models_phase8_lifecycle_peer_priors",
+      "files": 30,
+      "size_mb": 98.03,
+      "category": "generated_model_artifact",
+      "recommendation": "Keep local or archive by manifest; do not commit binaries."
+    },
+    {
+      "path": "models",
+      "files": 26,
+      "size_mb": 93.59,
+      "category": "historical_model_artifact",
+      "recommendation": "Keep tracked references only; generated binaries stay ignored."
+    },
+    {
+      "path": "models_phase8_listing_zero_split_shadow_2026",
+      "files": 28,
+      "size_mb": 78.74,
+      "category": "generated_model_artifact",
+      "recommendation": "Keep local or archive by manifest; do not commit binaries."
+    },
+    {
+      "path": "models_phase8_event_inventory_shadow_2026",
+      "files": 24,
+      "size_mb": 78.59,
+      "category": "generated_model_artifact",
+      "recommendation": "Keep local or archive by manifest; do not commit binaries."
+    },
+    {
+      "path": "models_phase8_event_request_shadow",
+      "files": 24,
+      "size_mb": 78.37,
+      "category": "generated_model_artifact",
+      "recommendation": "Keep local or archive by manifest; do not commit binaries."
+    },
+    {
+      "path": "models_phase8_purchase_request_shadow",
+      "files": 24,
+      "size_mb": 78.33,
+      "category": "generated_model_artifact",
+      "recommendation": "Keep local or archive by manifest; do not commit binaries."
+    },
+    {
+      "path": "models_phase8_listing_date_targeted",
+      "files": 24,
+      "size_mb": 78.28,
+      "category": "generated_model_artifact",
+      "recommendation": "Keep local or archive by manifest; do not commit binaries."
+    },
+    {
+      "path": "models_phase8_listing_date_stage_ablation",
+      "files": 24,
+      "size_mb": 78.27,
+      "category": "generated_model_artifact",
+      "recommendation": "Keep local or archive by manifest; do not commit binaries."
+    },
+    {
+      "path": "models_phase8_peer_prior_46_90",
+      "files": 24,
+      "size_mb": 78.27,
+      "category": "generated_model_artifact",
+      "recommendation": "Keep local or archive by manifest; do not commit binaries."
+    },
+    {
+      "path": "models_phase8_lifecycle_shadow",
+      "files": 24,
+      "size_mb": 78.23,
+      "category": "generated_model_artifact",
+      "recommendation": "Keep local or archive by manifest; do not commit binaries."
+    },
+    {
+      "path": "models_phase7_refresh_validation_20260416",
+      "files": 24,
+      "size_mb": 78.14,
+      "category": "generated_model_artifact",
+      "recommendation": "Keep local or archive by manifest; do not commit binaries."
+    },
+    {
+      "path": "models_phase8_event_shadow",
+      "files": 18,
+      "size_mb": 58.72,
+      "category": "generated_model_artifact",
+      "recommendation": "Keep local or archive by manifest; do not commit binaries."
+    },
+    {
+      "path": "models_phase8_inventory_zero_split_shadow_2026",
+      "files": 12,
+      "size_mb": 39.34,
+      "category": "generated_model_artifact",
+      "recommendation": "Keep local or archive by manifest; do not commit binaries."
+    },
+    {
+      "path": "src",
+      "files": 208,
+      "size_mb": 3.22,
+      "category": "source_or_test_code",
+      "recommendation": "Review normally; code changes should be committed intentionally."
+    },
+    {
+      "path": ".git",
+      "files": 626,
+      "size_mb": 3.11,
+      "category": "tooling_or_cache",
+      "recommendation": "Usually local; commit only config files."
+    },
+    {
+      "path": "scripts",
+      "files": 146,
+      "size_mb": 1.42,
+      "category": "source_or_test_code",
+      "recommendation": "Review normally; code changes should be committed intentionally."
+    },
+    {
+      "path": "modules",
+      "files": 69,
+      "size_mb": 0.62,
+      "category": "active_profit_analysis_module",
+      "recommendation": "Review and commit as a separate module-focused change."
+    },
+    {
+      "path": "__pycache__",
+      "files": 9,
+      "size_mb": 0.08,
+      "category": "other",
+      "recommendation": "Review manually."
+    },
+    {
+      "path": "tests",
+      "files": 23,
+      "size_mb": 0.08,
+      "category": "source_or_test_code",
+      "recommendation": "Review normally; code changes should be committed intentionally."
+    },
+    {
+      "path": "diagnostics",
+      "files": 5,
+      "size_mb": 0.02,
+      "category": "other",
+      "recommendation": "Review manually."
+    },
+    {
+      "path": "docs",
+      "files": 3,
+      "size_mb": 0.02,
+      "category": "source_or_test_code",
+      "recommendation": "Review normally; code changes should be committed intentionally."
+    },
+    {
+      "path": ".pytest_cache",
+      "files": 6,
+      "size_mb": 0.0,
+      "category": "tooling_or_cache",
+      "recommendation": "Usually local; commit only config files."
+    },
+    {
+      "path": "config",
+      "files": 2,
+      "size_mb": 0.0,
+      "category": "source_or_test_code",
+      "recommendation": "Review normally; code changes should be committed intentionally."
+    },
+    {
+      "path": "utils",
+      "files": 5,
+      "size_mb": 0.0,
+      "category": "source_or_test_code",
+      "recommendation": "Review normally; code changes should be committed intentionally."
+    }
+  ],
+  "git_status_groups": {
+    "other_pending": [
+      {
+        "status": " M",
+        "path": ".gitignore"
+      },
+      {
+        "status": " M",
+        "path": "reports/phase8a_prep/phase8_residual_gap_summary.md"
+      },
+      {
+        "status": " M",
+        "path": "reports/phase8a_prep/phase8a_prep_manifest.json"
+      },
+      {
+        "status": " D",
+        "path": "\"\\347\\233\\210\\344\\272\\217\\345\\210\\206\\346\\236\\220\\346\\250\\241\\345\\235\\227V1\\346\\212\\200\\346\\234\\257\\346\\226\\271\\346\\241\\210.md\""
+      },
+      {
+        "status": "??",
+        "path": "reports/client_ready/"
+      },
+      {
+        "status": "??",
+        "path": "reports/decision_scheduler_demo/"
+      },
+      {
+        "status": "??",
+        "path": "reports/inventory_snapshot_demo/"
+      },
+      {
+        "status": "??",
+        "path": "reports/phase8a_prep/lifecycle_launch_date_coverage_audit.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/phase8a_prep/phase8_purchase_request_data_coverage_audit.md"
+      }
+    ],
+    "source_code_pending": [
+      {
+        "status": " M",
+        "path": "evaluate_tabular.py"
+      },
+      {
+        "status": " M",
+        "path": "src/etl/build_wide_table.py"
+      },
+      {
+        "status": " M",
+        "path": "src/etl/clean_data.py"
+      },
+      {
+        "status": " M",
+        "path": "src/features/build_features_v5_lite_sku.py"
+      },
+      {
+        "status": " M",
+        "path": "src/features/build_features_v6_event_inventory_shadow_sku.py"
+      },
+      {
+        "status": " M",
+        "path": "src/features/build_features_v6_event_sku.py"
+      },
+      {
+        "status": " M",
+        "path": "src/features/phase53_feature_utils.py"
+      },
+      {
+        "status": " M",
+        "path": "src/train/train_tabular_v6.py"
+      },
+      {
+        "status": "??",
+        "path": "scripts/analysis/demo_inventory_snapshot_usage.py"
+      },
+      {
+        "status": "??",
+        "path": "scripts/analysis/demo_replenishment_decision_scheduler.py"
+      },
+      {
+        "status": "??",
+        "path": "scripts/analysis/generate_client_mainline_anchor_pack.py"
+      },
+      {
+        "status": "??",
+        "path": "scripts/maintenance/"
+      },
+      {
+        "status": "??",
+        "path": "scripts/runners/phase7/run_phase7_mainline_refresh_validation_20260416.py"
+      },
+      {
+        "status": "??",
+        "path": "scripts/runners/phase8/run_phase8_formal_stage1_20260614.py"
+      },
+      {
+        "status": "??",
+        "path": "scripts/runners/phase8/run_phase8_formal_stage1b_20260614.py"
+      },
+      {
+        "status": "??",
+        "path": "scripts/runners/phase8/run_phase8_formal_stage2_20260614.py"
+      },
+      {
+        "status": "??",
+        "path": "scripts/runners/phase8/run_phase8_listing_zero_split_shadow_2026.py"
+      },
+      {
+        "status": "??",
+        "path": "scripts/runners/phase8/run_phase8l_purchase_request_shadow.py"
+      },
+      {
+        "status": "??",
+        "path": "scripts/runners/phase8/run_phase8m_lifecycle_shadow.py"
+      },
+      {
+        "status": "??",
+        "path": "scripts/runners/phase8/run_phase8n_listing_date_targeted.py"
+      },
+      {
+        "status": "??",
+        "path": "scripts/runners/phase8/run_phase8o_lifecycle_peer_priors.py"
+      },
+      {
+        "status": "??",
+        "path": "scripts/runners/phase8/run_phase8p_peer_prior_46_90.py"
+      },
+      {
+        "status": "??",
+        "path": "scripts/runners/phase8/run_phase8q_2026_out_of_time.py"
+      },
+      {
+        "status": "??",
+        "path": "scripts/runners/phase8/run_phase8r_robust_oot.py"
+      },
+      {
+        "status": "??",
+        "path": "scripts/runners/phase8/run_phase8s_event_core_robust_oot.py"
+      },
+      {
+        "status": "??",
+        "path": "src/analysis/analyze_phase8r_listing_hybrids.py"
+      },
+      {
+        "status": "??",
+        "path": "src/analysis/build_launch_date_lifecycle_v0_features.py"
+      },
+      {
+        "status": "??",
+        "path": "src/analysis/build_phase8_listing_hybrid_candidates.py"
+      },
+      {
+        "status": "??",
+        "path": "src/analysis/generate_phase8_purchase_request_diagnostics.py"
+      },
+      {
+        "status": "??",
+        "path": "src/analysis/generate_phase8_purchase_request_prep_artifacts.py"
+      },
+      {
+        "status": "??",
+        "path": "src/analysis/generate_phase8q_full_phase7_comparison.py"
+      },
+      {
+        "status": "??",
+        "path": "src/analysis/summarize_phase8_listing_zero_split_results.py"
+      },
+      {
+        "status": "??",
+        "path": "src/analysis/summarize_phase8l_purchase_request_shadow_results.py"
+      },
+      {
+        "status": "??",
+        "path": "src/analysis/summarize_phase8m_lifecycle_shadow_results.py"
+      },
+      {
+        "status": "??",
+        "path": "src/analysis/summarize_phase8n_listing_date_ablation.py"
+      },
+      {
+        "status": "??",
+        "path": "src/analysis/summarize_phase8n_listing_date_targeted_results.py"
+      },
+      {
+        "status": "??",
+        "path": "src/analysis/summarize_phase8o_lifecycle_peer_prior_results.py"
+      },
+      {
+        "status": "??",
+        "path": "src/analysis/summarize_phase8p_peer_prior_46_90_results.py"
+      },
+      {
+        "status": "??",
+        "path": "src/analysis/summarize_phase8q_2026_out_of_time.py"
+      },
+      {
+        "status": "??",
+        "path": "src/analysis/summarize_phase8r_robust_oot.py"
+      },
+      {
+        "status": "??",
+        "path": "src/features/build_features_v6_lifecycle_peer_prior_sku.py"
+      },
+      {
+        "status": "??",
+        "path": "src/features/build_features_v6_lifecycle_shadow_sku.py"
+      },
+      {
+        "status": "??",
+        "path": "src/features/build_features_v6_listing_targeted_sku.py"
+      },
+      {
+        "status": "??",
+        "path": "src/features/build_features_v6_zero_split_listing_date_sku.py"
+      },
+      {
+        "status": "??",
+        "path": "src/features/combine_phase8_inventory_request_assets.py"
+      },
+      {
+        "status": "??",
+        "path": "src/features/lifecycle_peer_priors.py"
+      },
+      {
+        "status": "??",
+        "path": "tests/"
+      }
+    ],
+    "profit_analysis_module_pending": [
+      {
+        "status": " M",
+        "path": "modules/profit_analysis/README.md"
+      },
+      {
+        "status": " M",
+        "path": "modules/profit_analysis/config/profit_analysis_business_defaults_template.csv"
+      },
+      {
+        "status": " M",
+        "path": "modules/profit_analysis/config/profit_analysis_economics_config_template.csv"
+      },
+      {
+        "status": " M",
+        "path": "modules/profit_analysis/config/profit_analysis_inventory_snapshot_template.csv"
+      },
+      {
+        "status": " M",
+        "path": "modules/profit_analysis/config/profit_analysis_prediction_snapshot_template.csv"
+      },
+      {
+        "status": " M",
+        "path": "modules/profit_analysis/scripts/backtest_profit_analysis.py"
+      },
+      {
+        "status": " M",
+        "path": "modules/profit_analysis/scripts/build_profit_analysis_inputs.py"
+      },
+      {
+        "status": " M",
+        "path": "modules/profit_analysis/scripts/run_profit_analysis_snapshot.py"
+      },
+      {
+        "status": " M",
+        "path": "modules/profit_analysis/src/profit_analysis/__init__.py"
+      },
+      {
+        "status": " M",
+        "path": "modules/profit_analysis/src/profit_analysis/builders.py"
+      },
+      {
+        "status": " M",
+        "path": "modules/profit_analysis/src/profit_analysis/core.py"
+      },
+      {
+        "status": " M",
+        "path": "modules/profit_analysis/src/profit_analysis/io.py"
+      },
+      {
+        "status": "??",
+        "path": "modules/profit_analysis/config/demand_scenario_calibration_h45_20260612.json"
+      },
+      {
+        "status": "??",
+        "path": "modules/profit_analysis/config/profit_analysis_business_defaults_client_feedback_20260515.csv"
+      },
+      {
+        "status": "??",
+        "path": "modules/profit_analysis/docs/profit_analysis_module_delivery_20260612.md"
+      },
+      {
+        "status": "??",
+        "path": "modules/profit_analysis/docs/profit_analysis_module_v1_detailed_design_20260522.md"
+      },
+      {
+        "status": "??",
+        "path": "modules/profit_analysis/docs/profit_analysis_v0_client_feedback_rules_20260515.md"
+      },
+      {
+        "status": "??",
+        "path": "modules/profit_analysis/docs/source_materials/"
+      },
+      {
+        "status": "??",
+        "path": "modules/profit_analysis/scripts/normalize_style_costs.py"
+      },
+      {
+        "status": "??",
+        "path": "modules/profit_analysis/scripts/run_real_data_experiment.py"
+      },
+      {
+        "status": "??",
+        "path": "modules/profit_analysis/scripts/run_skc_profit_snapshot.py"
+      },
+      {
+        "status": "??",
+        "path": "modules/profit_analysis/scripts/run_skc_real_data_experiment.py"
+      },
+      {
+        "status": "??",
+        "path": "modules/profit_analysis/src/profit_analysis/allocation.py"
+      },
+      {
+        "status": "??",
+        "path": "modules/profit_analysis/src/profit_analysis/calibration.py"
+      },
+      {
+        "status": "??",
+        "path": "modules/profit_analysis/src/profit_analysis/decision.py"
+      },
+      {
+        "status": "??",
+        "path": "modules/profit_analysis/src/profit_analysis/grouping.py"
+      },
+      {
+        "status": "??",
+        "path": "modules/profit_analysis/src/profit_analysis/horizon.py"
+      },
+      {
+        "status": "??",
+        "path": "modules/profit_analysis/tests/"
+      }
+    ],
+    "curated_current_report_candidate": [
+      {
+        "status": " M",
+        "path": "reports/current/phase8_restart_playbook_20260409.md"
+      },
+      {
+        "status": " D",
+        "path": "reports/current/profit_analysis_module_v1_proposal_20260410.md"
+      },
+      {
+        "status": " M",
+        "path": "reports/current/v_irs_orderftp_audit.md"
+      },
+      {
+        "status": " D",
+        "path": "\"reports/current/\\347\\233\\210\\344\\272\\217\\345\\210\\206\\346\\236\\220\\346\\250\\241\\345\\235\\227V1\\346\\212\\200\\346\\234\\257\\346\\226\\271\\346\\241\\210_20260410.md\""
+      },
+      {
+        "status": "??",
+        "path": "reports/current/actual_qty_audit_phase7_anchors_20260417.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/client_feedback_20250430_meeting_20260515.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/daily_work_summary_for_advisor_20260515.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/launch_date_intake_spec_20260515.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/launch_date_integration_audit_20260612.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/phase7_client_actual_qty_audit_20251201_20260430.json"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/phase7_client_actual_qty_audit_20251201_20260430.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/phase7_client_export_non_ai_audit_20251201_20260417.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/phase7_client_export_refresh_followup_20251201_20260417.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/phase7_current_mainline_multidim_metrics_20260430.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/phase7_refresh_validation_checkpoint_20260416.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/phase7_stage_meeting_brief_20260430.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/phase8_2026_out_of_time_validation_20260612.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/phase8_2026_phase7_vs_listing_full_metrics_20260612.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/phase8_client_data_gap_priority_20260614.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/phase8_client_reply_checkpoint_20260416.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/phase8_lifecycle_peer_prior_upgrade_20260612.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/phase8_listing_date_lifecycle_shadow_20260612.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/phase8_listing_date_prediction_upgrade_20260612.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/phase8_listing_date_zero_split_checkpoint_20260614.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/phase8_official_style_2026_evaluation_20260616.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/phase8_pre_launch_date_work_20260515.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/phase8_signal_routes_strict_comparison_20260613.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/profit_analysis_style_cost_audit_20260612.json"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/profit_analysis_style_cost_audit_20260612.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/project_status_profit_analysis_brief_20260605.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/project_status_profit_analysis_roadmap_20260605.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/purchase_request_deep_dive_20260515.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/purchase_request_feature_shadow_20260515.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/purchase_request_mapping_audit_20260515.json"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/purchase_request_mapping_audit_20260515.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/purchase_request_table_audit_20260515.json"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/purchase_request_table_audit_20260515.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/server_data_intake_audit_20260614.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/v_irs_orderftp_refresh_audit_20260416.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/current/v_irs_orderftp_refresh_audit_20260614.md"
+      }
+    ],
+    "data_manifest_or_registry": [
+      {
+        "status": "??",
+        "path": "data/manifests/phase8_data_snapshot_20260614.json"
+      }
+    ],
+    "generated_or_historical_report": [
+      {
+        "status": "??",
+        "path": "reports/phase7_refresh_validation_20260416/"
+      },
+      {
+        "status": "??",
+        "path": "reports/phase8_2026_out_of_time/"
+      },
+      {
+        "status": "??",
+        "path": "reports/phase8_data_audit/"
+      },
+      {
+        "status": "??",
+        "path": "reports/phase8_event_core_robust_oot/"
+      },
+      {
+        "status": "??",
+        "path": "reports/phase8_formal_stage1_20260614/"
+      },
+      {
+        "status": "??",
+        "path": "reports/phase8_formal_stage1b_20260614/"
+      },
+      {
+        "status": "??",
+        "path": "reports/phase8_formal_stage2_20260614/"
+      },
+      {
+        "status": "??",
+        "path": "reports/phase8_lifecycle_peer_priors/"
+      },
+      {
+        "status": "??",
+        "path": "reports/phase8_lifecycle_shadow/"
+      },
+      {
+        "status": "??",
+        "path": "reports/phase8_listing_date_stage_ablation/"
+      },
+      {
+        "status": "??",
+        "path": "reports/phase8_listing_date_targeted/"
+      },
+      {
+        "status": "??",
+        "path": "reports/phase8_listing_zero_split_shadow_2026/"
+      },
+      {
+        "status": "??",
+        "path": "reports/phase8_peer_prior_46_90/"
+      },
+      {
+        "status": "??",
+        "path": "reports/phase8_purchase_request_diagnostics/"
+      },
+      {
+        "status": "??",
+        "path": "reports/phase8_purchase_request_shadow/"
+      },
+      {
+        "status": "??",
+        "path": "reports/phase8_robust_oot/"
+      },
+      {
+        "status": "??",
+        "path": "reports/profit_analysis_launch_date_safe_20260612/"
+      },
+      {
+        "status": "??",
+        "path": "reports/profit_analysis_lifecycle_smoke/"
+      },
+      {
+        "status": "??",
+        "path": "reports/profit_analysis_real_data_20260612/"
+      },
+      {
+        "status": "??",
+        "path": "reports/profit_analysis_real_data_smoke/"
+      },
+      {
+        "status": "??",
+        "path": "reports/profit_analysis_skc_h45_final_smoke/"
+      },
+      {
+        "status": "??",
+        "path": "reports/profit_analysis_skc_h45_smoke/"
+      },
+      {
+        "status": "??",
+        "path": "reports/profit_analysis_skc_real_cost_20260612/"
+      },
+      {
+        "status": "??",
+        "path": "reports/profit_analysis_skc_real_cost_h45_20260612/"
+      },
+      {
+        "status": "??",
+        "path": "reports/profit_analysis_skc_real_data_20260612/"
+      },
+      {
+        "status": "??",
+        "path": "reports/profit_analysis_skc_real_data_smoke/"
+      },
+      {
+        "status": "??",
+        "path": "reports/profit_analysis_smoke/"
+      },
+      {
+        "status": "??",
+        "path": "reports/profit_analysis_snapshot_real_smoke/"
+      },
+      {
+        "status": "??",
+        "path": "reports/profit_analysis_snapshot_smoke/"
+      },
+      {
+        "status": "??",
+        "path": "reports/profit_analysis_snapshot_smoke_final/"
+      }
+    ]
+  }
+}

@@ -34,6 +34,7 @@ Current conclusion:
 - Reports index: `reports/REPORTS_INDEX.md`
 - Data index: `data/DATA_INDEX.md`
 - Models index: `MODELS_INDEX.md`
+- Artifact policy: `ARTIFACTS_INDEX.md`
 
 ## Current Canonical Reports
 

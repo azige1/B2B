@@ -11,6 +11,7 @@ For current project status:
 5. `RUNNERS_INDEX.md`
 6. `data/DATA_INDEX.md`
 7. `MODELS_INDEX.md`
+8. `ARTIFACTS_INDEX.md`
 
 For the profit-analysis module:
 
@@ -52,6 +53,7 @@ Profit analysis:
 - `MODELS_INDEX.md`: model artifact map and current-vs-experiment distinction.
 - `data/DATA_INDEX.md`: data source, snapshot, and downstream rebuild status.
 - `reports/REPORTS_INDEX.md`: report directory map.
+- `ARTIFACTS_INDEX.md`: policy for generated artifacts, local snapshots, and model outputs.
 
 ## Historical Material
 

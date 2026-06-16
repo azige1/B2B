@@ -62,6 +62,12 @@ Local snapshot sync helper for the older structured server warehouse format:
 python scripts/data/sync_phase8_server_snapshot.py --source <source> --cutoff <YYYYMMDD>
 ```
 
+Workspace artifact inventory:
+
+```bash
+python scripts/maintenance/inventory_workspace_artifacts.py
+```
+
 ## Profit Analysis
 
 Production-style SKC snapshot:

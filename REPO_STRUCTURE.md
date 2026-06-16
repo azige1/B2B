@@ -147,3 +147,8 @@ When handing this project to someone else, point them to:
 5. `RUNNERS_INDEX.md`
 
 They should not start from `reports/phase*/` unless they are auditing history.
+
+For large generated artifacts and local cleanup policy, read:
+
+6. `ARTIFACTS_INDEX.md`
+7. `reports/current/workspace_artifact_inventory_20260616.md`
