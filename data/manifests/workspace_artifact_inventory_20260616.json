@@ -1,17 +1,17 @@
 {
-  "generated_at": "2026-06-16T17:47:12",
+  "generated_at": "2026-06-16T18:04:26",
   "directories": [
     {
       "path": "data",
-      "files": 1881,
-      "size_mb": 253805.26,
+      "files": 1152,
+      "size_mb": 64647.69,
       "category": "data_assets",
       "recommendation": "Use data/DATA_INDEX.md and manifests; do not bulk commit generated data."
     },
     {
       "path": "reports",
-      "files": 1935,
-      "size_mb": 1484.36,
+      "files": 1938,
+      "size_mb": 1484.38,
       "category": "reports_and_experiments",
       "recommendation": "Commit curated current docs; leave generated exports ignored."
     },
@@ -178,15 +178,15 @@
     },
     {
       "path": ".git",
-      "files": 626,
-      "size_mb": 3.11,
+      "files": 646,
+      "size_mb": 3.13,
       "category": "tooling_or_cache",
       "recommendation": "Usually local; commit only config files."
     },
     {
       "path": "scripts",
-      "files": 146,
-      "size_mb": 1.42,
+      "files": 147,
+      "size_mb": 1.43,
       "category": "source_or_test_code",
       "recommendation": "Review normally; code changes should be committed intentionally."
     },
@@ -248,44 +248,6 @@
     }
   ],
   "git_status_groups": {
-    "other_pending": [
-      {
-        "status": " M",
-        "path": ".gitignore"
-      },
-      {
-        "status": " M",
-        "path": "reports/phase8a_prep/phase8_residual_gap_summary.md"
-      },
-      {
-        "status": " M",
-        "path": "reports/phase8a_prep/phase8a_prep_manifest.json"
-      },
-      {
-        "status": " D",
-        "path": "\"\\347\\233\\210\\344\\272\\217\\345\\210\\206\\346\\236\\220\\346\\250\\241\\345\\235\\227V1\\346\\212\\200\\346\\234\\257\\346\\226\\271\\346\\241\\210.md\""
-      },
-      {
-        "status": "??",
-        "path": "reports/client_ready/"
-      },
-      {
-        "status": "??",
-        "path": "reports/decision_scheduler_demo/"
-      },
-      {
-        "status": "??",
-        "path": "reports/inventory_snapshot_demo/"
-      },
-      {
-        "status": "??",
-        "path": "reports/phase8a_prep/lifecycle_launch_date_coverage_audit.md"
-      },
-      {
-        "status": "??",
-        "path": "reports/phase8a_prep/phase8_purchase_request_data_coverage_audit.md"
-      }
-    ],
     "source_code_pending": [
       {
         "status": " M",
@@ -330,10 +292,6 @@
       {
         "status": "??",
         "path": "scripts/analysis/generate_client_mainline_anchor_pack.py"
-      },
-      {
-        "status": "??",
-        "path": "scripts/maintenance/"
       },
       {
         "status": "??",
@@ -621,6 +579,10 @@
       },
       {
         "status": "??",
+        "path": "reports/current/feature_cache_cleanup_20260616.md"
+      },
+      {
+        "status": "??",
         "path": "reports/current/launch_date_intake_spec_20260515.md"
       },
       {
@@ -752,7 +714,49 @@
         "path": "reports/current/v_irs_orderftp_refresh_audit_20260614.md"
       }
     ],
+    "other_pending": [
+      {
+        "status": " M",
+        "path": "reports/phase8a_prep/phase8_residual_gap_summary.md"
+      },
+      {
+        "status": " M",
+        "path": "reports/phase8a_prep/phase8a_prep_manifest.json"
+      },
+      {
+        "status": " D",
+        "path": "\"\\347\\233\\210\\344\\272\\217\\345\\210\\206\\346\\236\\220\\346\\250\\241\\345\\235\\227V1\\346\\212\\200\\346\\234\\257\\346\\226\\271\\346\\241\\210.md\""
+      },
+      {
+        "status": "??",
+        "path": "reports/client_ready/"
+      },
+      {
+        "status": "??",
+        "path": "reports/decision_scheduler_demo/"
+      },
+      {
+        "status": "??",
+        "path": "reports/inventory_snapshot_demo/"
+      },
+      {
+        "status": "??",
+        "path": "reports/phase8a_prep/lifecycle_launch_date_coverage_audit.md"
+      },
+      {
+        "status": "??",
+        "path": "reports/phase8a_prep/phase8_purchase_request_data_coverage_audit.md"
+      }
+    ],
     "data_manifest_or_registry": [
+      {
+        "status": "??",
+        "path": "data/manifests/feature_cache_cleanup_deleted_20260616.csv"
+      },
+      {
+        "status": "??",
+        "path": "data/manifests/feature_cache_size_inventory_20260616.csv"
+      },
       {
         "status": "??",
         "path": "data/manifests/phase8_data_snapshot_20260614.json"

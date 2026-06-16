@@ -1,6 +1,6 @@
 ﻿path,files,size_mb,category,recommendation
-data,1881,253805.26,data_assets,Use data/DATA_INDEX.md and manifests; do not bulk commit generated data.
-reports,1935,1484.36,reports_and_experiments,Commit curated current docs; leave generated exports ignored.
+data,1152,64647.69,data_assets,Use data/DATA_INDEX.md and manifests; do not bulk commit generated data.
+reports,1938,1484.38,reports_and_experiments,Commit curated current docs; leave generated exports ignored.
 models_phase8_robust_oot,270,880.69,generated_model_artifact,Keep local or archive by manifest; do not commit binaries.
 models_phase8_formal_stage2_20260614,270,880.46,generated_model_artifact,Keep local or archive by manifest; do not commit binaries.
 data_warehouse,763,546.71,raw_snapshot_warehouse,Keep local snapshots with manifests; do not commit CSV extracts.
@@ -24,8 +24,8 @@ models_phase7_refresh_validation_20260416,24,78.14,generated_model_artifact,Keep
 models_phase8_event_shadow,18,58.72,generated_model_artifact,Keep local or archive by manifest; do not commit binaries.
 models_phase8_inventory_zero_split_shadow_2026,12,39.34,generated_model_artifact,Keep local or archive by manifest; do not commit binaries.
 src,208,3.22,source_or_test_code,Review normally; code changes should be committed intentionally.
-.git,626,3.11,tooling_or_cache,Usually local; commit only config files.
-scripts,146,1.42,source_or_test_code,Review normally; code changes should be committed intentionally.
+.git,646,3.13,tooling_or_cache,Usually local; commit only config files.
+scripts,147,1.43,source_or_test_code,Review normally; code changes should be committed intentionally.
 modules,69,0.62,active_profit_analysis_module,Review and commit as a separate module-focused change.
 __pycache__,9,0.08,other,Review manually.
 tests,23,0.08,source_or_test_code,Review normally; code changes should be committed intentionally.

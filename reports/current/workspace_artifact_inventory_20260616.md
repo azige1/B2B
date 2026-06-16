@@ -1,6 +1,6 @@
 # Workspace Artifact Inventory
 
-Generated at: `2026-06-16T17:47:12`
+Generated at: `2026-06-16T18:04:26`
 
 ## Purpose
 
@@ -10,8 +10,8 @@ This report separates source code and curated handoff documents from generated l
 
 | path | files | size_mb | category | recommendation |
 | --- | ---: | ---: | --- | --- |
-| `data` | 1881 | 253805.26 | data_assets | Use data/DATA_INDEX.md and manifests; do not bulk commit generated data. |
-| `reports` | 1935 | 1484.36 | reports_and_experiments | Commit curated current docs; leave generated exports ignored. |
+| `data` | 1152 | 64647.69 | data_assets | Use data/DATA_INDEX.md and manifests; do not bulk commit generated data. |
+| `reports` | 1938 | 1484.38 | reports_and_experiments | Commit curated current docs; leave generated exports ignored. |
 | `models_phase8_robust_oot` | 270 | 880.69 | generated_model_artifact | Keep local or archive by manifest; do not commit binaries. |
 | `models_phase8_formal_stage2_20260614` | 270 | 880.46 | generated_model_artifact | Keep local or archive by manifest; do not commit binaries. |
 | `data_warehouse` | 763 | 546.71 | raw_snapshot_warehouse | Keep local snapshots with manifests; do not commit CSV extracts. |
@@ -35,8 +35,8 @@ This report separates source code and curated handoff documents from generated l
 | `models_phase8_event_shadow` | 18 | 58.72 | generated_model_artifact | Keep local or archive by manifest; do not commit binaries. |
 | `models_phase8_inventory_zero_split_shadow_2026` | 12 | 39.34 | generated_model_artifact | Keep local or archive by manifest; do not commit binaries. |
 | `src` | 208 | 3.22 | source_or_test_code | Review normally; code changes should be committed intentionally. |
-| `.git` | 626 | 3.11 | tooling_or_cache | Usually local; commit only config files. |
-| `scripts` | 146 | 1.42 | source_or_test_code | Review normally; code changes should be committed intentionally. |
+| `.git` | 646 | 3.13 | tooling_or_cache | Usually local; commit only config files. |
+| `scripts` | 147 | 1.43 | source_or_test_code | Review normally; code changes should be committed intentionally. |
 | `modules` | 69 | 0.62 | active_profit_analysis_module | Review and commit as a separate module-focused change. |
 | `__pycache__` | 9 | 0.08 | other | Review manually. |
 | `tests` | 23 | 0.08 | source_or_test_code | Review normally; code changes should be committed intentionally. |
@@ -50,7 +50,7 @@ This report separates source code and curated handoff documents from generated l
 
 ### curated_current_report_candidate
 
-- Count: `40`
+- Count: `41`
 
 - ` M` `reports/current/phase8_restart_playbook_20260409.md`
 - ` D` `reports/current/profit_analysis_module_v1_proposal_20260410.md`
@@ -59,6 +59,7 @@ This report separates source code and curated handoff documents from generated l
 - `??` `reports/current/actual_qty_audit_phase7_anchors_20260417.md`
 - `??` `reports/current/client_feedback_20250430_meeting_20260515.md`
 - `??` `reports/current/daily_work_summary_for_advisor_20260515.md`
+- `??` `reports/current/feature_cache_cleanup_20260616.md`
 - `??` `reports/current/launch_date_intake_spec_20260515.md`
 - `??` `reports/current/launch_date_integration_audit_20260612.md`
 - `??` `reports/current/phase7_client_actual_qty_audit_20251201_20260430.json`
@@ -91,12 +92,14 @@ This report separates source code and curated handoff documents from generated l
 - `??` `reports/current/purchase_request_table_audit_20260515.md`
 - `??` `reports/current/server_data_intake_audit_20260614.md`
 - `??` `reports/current/v_irs_orderftp_refresh_audit_20260416.md`
-- `??` `reports/current/v_irs_orderftp_refresh_audit_20260614.md`
+- ... 1 more
 
 ### data_manifest_or_registry
 
-- Count: `1`
+- Count: `3`
 
+- `??` `data/manifests/feature_cache_cleanup_deleted_20260616.csv`
+- `??` `data/manifests/feature_cache_size_inventory_20260616.csv`
 - `??` `data/manifests/phase8_data_snapshot_20260614.json`
 
 ### generated_or_historical_report
@@ -136,9 +139,8 @@ This report separates source code and curated handoff documents from generated l
 
 ### other_pending
 
-- Count: `9`
+- Count: `8`
 
-- ` M` `.gitignore`
 - ` M` `reports/phase8a_prep/phase8_residual_gap_summary.md`
 - ` M` `reports/phase8a_prep/phase8a_prep_manifest.json`
 - ` D` `"\347\233\210\344\272\217\345\210\206\346\236\220\346\250\241\345\235\227V1\346\212\200\346\234\257\346\226\271\346\241\210.md"`
@@ -183,7 +185,7 @@ This report separates source code and curated handoff documents from generated l
 
 ### source_code_pending
 
-- Count: `47`
+- Count: `46`
 
 - ` M` `evaluate_tabular.py`
 - ` M` `src/etl/build_wide_table.py`
@@ -196,7 +198,6 @@ This report separates source code and curated handoff documents from generated l
 - `??` `scripts/analysis/demo_inventory_snapshot_usage.py`
 - `??` `scripts/analysis/demo_replenishment_decision_scheduler.py`
 - `??` `scripts/analysis/generate_client_mainline_anchor_pack.py`
-- `??` `scripts/maintenance/`
 - `??` `scripts/runners/phase7/run_phase7_mainline_refresh_validation_20260416.py`
 - `??` `scripts/runners/phase8/run_phase8_formal_stage1_20260614.py`
 - `??` `scripts/runners/phase8/run_phase8_formal_stage1b_20260614.py`
@@ -225,7 +226,8 @@ This report separates source code and curated handoff documents from generated l
 - `??` `src/analysis/summarize_phase8p_peer_prior_46_90_results.py`
 - `??` `src/analysis/summarize_phase8q_2026_out_of_time.py`
 - `??` `src/analysis/summarize_phase8r_robust_oot.py`
-- ... 7 more
+- `??` `src/features/build_features_v6_lifecycle_peer_prior_sku.py`
+- ... 6 more
 
 ## Cleanup Recommendations
 
