@@ -47,12 +47,27 @@ def parse_args():
     )
     parser.add_argument(
         "--lifecycle-source",
-        default=str(PROJECT_ROOT / "data_warehouse" / "dim_product" / "product_info_latest1.csv"),
-        help="Lifecycle source CSV.",
+        default=str(PROJECT_ROOT / "data" / "phase8a_prep" / "lifecycle_launch_date_features.csv"),
+        help="Lifecycle source CSV. Defaults to the normalized launch-date lifecycle feature table.",
+    )
+    parser.add_argument(
+        "--style-cost-source",
+        default=str(
+            PROJECT_ROOT
+            / "data"
+            / "incoming"
+            / "profit_analysis"
+            / "style_costs_2024_2026.csv"
+        ),
+        help="Optional normalized style_id cost table.",
     )
     parser.add_argument(
         "--defaults-csv",
-        default=str(MODULE_ROOT / "config" / "profit_analysis_business_defaults_template.csv"),
+        default=str(
+            MODULE_ROOT
+            / "config"
+            / "profit_analysis_business_defaults_client_feedback_20260515.csv"
+        ),
         help="Business defaults CSV.",
     )
     parser.add_argument(
@@ -87,7 +102,8 @@ def main():
     clean_inventory = pd.read_csv(args.inventory_source)
     products = pd.read_csv(args.products_source)
     wide_table = _load_optional_csv(args.wide_table_source, usecols=["sku_id", "date", "qty_inbound"])
-    lifecycle = _load_optional_csv(args.lifecycle_source, usecols=["NO", "PL_CYCLE", "LISTING_DATE"])
+    lifecycle = _load_optional_csv(args.lifecycle_source)
+    style_costs = _load_optional_csv(args.style_cost_source)
     defaults_df = load_policy_defaults(args.defaults_csv)
 
     inventory_snapshot = build_inventory_snapshot(
@@ -102,6 +118,7 @@ def main():
         product_df=products,
         defaults_df=defaults_df,
         lifecycle_df=lifecycle,
+        style_cost_df=style_costs,
     )
 
     stamp = time.strftime("%Y%m%d_%H%M")

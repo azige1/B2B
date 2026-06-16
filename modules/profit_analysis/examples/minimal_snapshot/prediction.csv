@@ -1,0 +1,4 @@
+sku_id,style_id,snapshot_date,pred_prob_positive,pred_qty_30d,prediction_version
+AK1001-36,AK1001,2026-05-01,0.90,80.0,demo_minimal
+AK1001-38,AK1001,2026-05-01,0.80,60.0,demo_minimal
+AK1002-36,AK1002,2026-05-01,0.25,20.0,demo_minimal

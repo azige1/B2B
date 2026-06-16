@@ -49,6 +49,12 @@ def parse_args():
         help="Ranking policy for candidate plans.",
     )
     parser.add_argument(
+        "--horizon-days",
+        type=int,
+        default=45,
+        help="Requested profit simulation horizon. Default follows the client-feedback 45-day rule.",
+    )
+    parser.add_argument(
         "--output-dir",
         default=str(PROJECT_ROOT / "reports" / "profit_analysis"),
         help="Directory to store summary CSV and detail JSON outputs.",
@@ -71,6 +77,7 @@ def build_objects(row):
         inbound_within_30d=row.get("inbound_within_30d", 0.0),
         lead_time_days=row.get("lead_time_days", 0),
         min_batch_qty=row.get("min_batch_qty"),
+        increment_batch_qty=row.get("increment_batch_qty"),
         max_replenish_qty=row.get("max_replenish_qty"),
         safety_stock_qty=row.get("safety_stock_qty"),
         last_decision_date=row.get("last_decision_date"),
@@ -84,6 +91,8 @@ def build_objects(row):
         stockout_penalty_per_unit=row.get("stockout_penalty_per_unit", 0.0),
         other_fixed_cost=row.get("other_fixed_cost", 0.0),
         lifecycle_end_date=row.get("lifecycle_end_date"),
+        target_sell_through_rate=row.get("target_sell_through_rate", 0.85),
+        lifecycle_days=row.get("lifecycle_days", 45),
     )
     return model_output, inventory_state, economics
 
@@ -109,6 +118,7 @@ def main():
             inventory_state=inventory_state,
             economics=economics,
             policy=args.policy,
+            horizon_days=args.horizon_days,
         )
         details.append(rec)
         best_balanced = rec["best_balanced_plan"] or {}
@@ -117,7 +127,11 @@ def main():
         summary_rows.append(
             {
                 "sku_id": row["sku_id"],
+                "style_id": row.get("style_id"),
+                "category": row.get("category"),
                 "snapshot_date": row["snapshot_date"],
+                "launch_date": row.get("launch_date"),
+                "lifecycle_end_date": row.get("lifecycle_end_date"),
                 "policy": args.policy,
                 "pred_prob_positive": row["pred_prob_positive"],
                 "pred_qty_30d": row["pred_qty_30d"],
@@ -125,10 +139,28 @@ def main():
                 "inbound_within_30d": row.get("inbound_within_30d", 0.0),
                 "best_balanced_plan_qty": best_balanced.get("plan_qty"),
                 "best_balanced_expected_profit": best_balanced.get("expected_profit"),
+                "best_balanced_recommendation_score": best_balanced.get("recommendation_score"),
                 "best_balanced_stockout_rate": best_balanced.get("stockout_rate"),
+                "best_balanced_sell_through_rate": best_balanced.get("sell_through_rate"),
+                "best_balanced_sell_through_target_probability": best_balanced.get("sell_through_target_probability"),
+                "best_balanced_profit_positive_probability": best_balanced.get("profit_positive_probability"),
+                "best_balanced_expected_sales_revenue": best_balanced.get("expected_sales_revenue"),
+                "best_balanced_expected_replenish_cost": best_balanced.get("expected_replenish_cost"),
+                "best_balanced_expected_holding_cost": best_balanced.get("expected_holding_cost"),
+                "best_balanced_expected_stockout_cost": best_balanced.get("expected_stockout_cost"),
+                "best_balanced_expected_terminal_value": best_balanced.get("expected_terminal_value"),
                 "best_balanced_expected_leftover_qty": best_balanced.get("expected_leftover_qty"),
+                "best_balanced_expected_lost_sales_qty": best_balanced.get("expected_lost_sales_qty"),
+                "best_balanced_effective_horizon_days": best_balanced.get("effective_horizon_days"),
+                "best_balanced_remaining_lifecycle_days": best_balanced.get("remaining_lifecycle_days"),
+                "best_balanced_late_arrival_risk": best_balanced.get("late_arrival_risk"),
                 "best_profit_plan_qty": best_profit.get("plan_qty"),
                 "lowest_risk_plan_qty": lowest_risk.get("plan_qty"),
+                "target_sell_through_rate": rec.get("target_sell_through_rate"),
+                "requested_horizon_days": rec.get("requested_horizon_days"),
+                "remaining_lifecycle_days": rec.get("remaining_lifecycle_days"),
+                "horizon_days": rec.get("horizon_days"),
+                "cost_source": row.get("cost_source"),
             }
         )
 

@@ -1,5 +1,8 @@
 from .core import (
     CandidatePlan,
+    DEFAULT_HORIZON_DAYS,
+    DEFAULT_QTY_HORIZON_DAYS,
+    DEFAULT_TARGET_SELL_THROUGH_RATE,
     DemandScenario,
     Economics,
     InventoryState,
@@ -21,6 +24,29 @@ from .builders import (
     load_policy_defaults,
     normalize_prediction_snapshot,
 )
+from .calibration import (
+    DemandScenarioCalibration,
+    fit_demand_scenario_calibration,
+    load_demand_scenario_calibration,
+    probability_calibration_metrics,
+)
+from .decision import (
+    ProfitAnalysisQualityError,
+    SKCDecisionBatch,
+    build_skc_decision_batch,
+)
+from .allocation import allocate_integer_plan
+from .grouping import (
+    GroupDemandOutput,
+    aggregate_hurdle_outputs,
+    build_item_demand_gap_scores,
+)
+from .horizon import (
+    build_daily_demand_curves,
+    build_horizon_calibration_frame,
+    build_horizon_demand,
+    prepare_daily_demand,
+)
 from .io import (
     build_profit_input_frame,
     load_economics_config,
@@ -30,6 +56,9 @@ from .io import (
 
 __all__ = [
     "CandidatePlan",
+    "DEFAULT_HORIZON_DAYS",
+    "DEFAULT_QTY_HORIZON_DAYS",
+    "DEFAULT_TARGET_SELL_THROUGH_RATE",
     "DemandScenario",
     "Economics",
     "InventoryState",
@@ -45,6 +74,21 @@ __all__ = [
     "infer_actual_qty_col",
     "infer_prediction_column_spec",
     "normalize_prediction_snapshot",
+    "DemandScenarioCalibration",
+    "fit_demand_scenario_calibration",
+    "load_demand_scenario_calibration",
+    "probability_calibration_metrics",
+    "ProfitAnalysisQualityError",
+    "SKCDecisionBatch",
+    "build_skc_decision_batch",
+    "allocate_integer_plan",
+    "GroupDemandOutput",
+    "aggregate_hurdle_outputs",
+    "build_item_demand_gap_scores",
+    "build_daily_demand_curves",
+    "build_horizon_calibration_frame",
+    "build_horizon_demand",
+    "prepare_daily_demand",
     "load_policy_defaults",
     "build_inventory_snapshot",
     "build_economics_config",

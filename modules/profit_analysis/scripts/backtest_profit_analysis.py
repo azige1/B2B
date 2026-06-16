@@ -31,7 +31,7 @@ from profit_analysis import (
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Backtest profit-analysis strategies against realized 30-day demand.")
+    parser = argparse.ArgumentParser(description="Backtest profit-analysis strategies against realized demand.")
     parser.add_argument("--source-csv", required=True, help="Raw prediction/eval detail CSV with realized demand column.")
     parser.add_argument("--actual-col", default=None, help="Optional override for actual demand column.")
     parser.add_argument("--sku-col", default=None, help="Optional override for SKU column.")
@@ -57,8 +57,8 @@ def parse_args():
     )
     parser.add_argument(
         "--lifecycle-source",
-        default=str(PROJECT_ROOT / "data_warehouse" / "dim_product" / "product_info_latest1.csv"),
-        help="Lifecycle source CSV.",
+        default=str(PROJECT_ROOT / "data" / "phase8a_prep" / "lifecycle_launch_date_features.csv"),
+        help="Lifecycle source CSV. Defaults to the normalized launch-date lifecycle feature table.",
     )
     parser.add_argument(
         "--defaults-csv",
@@ -70,6 +70,12 @@ def parse_args():
         default="balanced",
         choices=["conservative", "balanced", "aggressive"],
         help="Which profit module recommendation policy to backtest.",
+    )
+    parser.add_argument(
+        "--horizon-days",
+        type=int,
+        default=45,
+        help="Lifecycle horizon for simulation. Use 30 if the realized demand column is strictly 30-day demand.",
     )
     parser.add_argument(
         "--output-dir",
@@ -156,7 +162,7 @@ def main():
     clean_inventory = pd.read_csv(args.inventory_source)
     products = pd.read_csv(args.products_source)
     wide_table = _load_optional_csv(args.wide_table_source, usecols=["sku_id", "date", "qty_inbound"])
-    lifecycle = _load_optional_csv(args.lifecycle_source, usecols=["NO", "PL_CYCLE", "LISTING_DATE"])
+    lifecycle = _load_optional_csv(args.lifecycle_source)
     defaults_df = load_policy_defaults(args.defaults_csv)
 
     inventory_snapshot = build_inventory_snapshot(
@@ -176,6 +182,13 @@ def main():
     work_df = prediction_snapshot.merge(actual_df, on=["sku_id", "snapshot_date"], how="inner")
     work_df = work_df.merge(inventory_snapshot, on=["sku_id", "snapshot_date"], how="inner")
     work_df = work_df.merge(economics_config, on="sku_id", how="inner")
+    for field in ["style_id", "category", "cost_source"]:
+        if field in work_df.columns:
+            continue
+        candidates = [f"{field}_x", f"{field}_y", f"{field}_pred", f"{field}_inv"]
+        source_col = next((col for col in candidates if col in work_df.columns), None)
+        if source_col:
+            work_df[field] = work_df[source_col]
     if work_df.empty:
         raise ValueError("No rows left after joining prediction, actual, inventory, and economics inputs.")
 
@@ -201,6 +214,7 @@ def main():
             inbound_within_30d=row.get("inbound_within_30d", 0.0),
             lead_time_days=row.get("lead_time_days", 0),
             min_batch_qty=row.get("min_batch_qty"),
+            increment_batch_qty=row.get("increment_batch_qty"),
             max_replenish_qty=row.get("max_replenish_qty"),
             safety_stock_qty=row.get("safety_stock_qty"),
             last_decision_date=row.get("last_decision_date"),
@@ -214,6 +228,8 @@ def main():
             stockout_penalty_per_unit=row.get("stockout_penalty_per_unit", 0.0),
             other_fixed_cost=row.get("other_fixed_cost", 0.0),
             lifecycle_end_date=row.get("lifecycle_end_date"),
+            target_sell_through_rate=row.get("target_sell_through_rate", 0.85),
+            lifecycle_days=row.get("lifecycle_days", args.horizon_days),
         )
 
         rec = recommend_replenishment_plans(
@@ -221,6 +237,7 @@ def main():
             inventory_state=inventory_state,
             economics=economics,
             policy=args.policy,
+            horizon_days=args.horizon_days,
         )
         recommended_plan_qty = float((rec["best_balanced_plan"] or {}).get("plan_qty", 0.0))
         direct_plan_qty = max(
@@ -241,11 +258,16 @@ def main():
                 economics=economics,
                 plan=plan,
                 actual_demand_qty=row["actual_demand_qty"],
+                horizon_days=args.horizon_days,
             )
             out = {
                 "strategy": strategy,
                 "sku_id": row["sku_id"],
+                "style_id": row.get("style_id"),
+                "category": row.get("category"),
                 "snapshot_date": row["snapshot_date"],
+                "launch_date": row.get("launch_date"),
+                "lifecycle_end_date": row.get("lifecycle_end_date"),
                 "prediction_version": row.get("prediction_version"),
                 "pred_prob_positive": row["pred_prob_positive"],
                 "pred_qty_30d": row["pred_qty_30d"],
@@ -258,6 +280,16 @@ def main():
                     if strategy == "profit_module_v1"
                     else None
                 ),
+                "expected_sell_through_rate_proxy": (
+                    float((rec["best_balanced_plan"] or {}).get("sell_through_rate", 0.0))
+                    if strategy == "profit_module_v1"
+                    else None
+                ),
+                "target_sell_through_rate": row.get("target_sell_through_rate", 0.85),
+                "requested_horizon_days": args.horizon_days,
+                "recommendation_effective_horizon_days": rec.get("horizon_days"),
+                "recommendation_remaining_lifecycle_days": rec.get("remaining_lifecycle_days"),
+                "cost_source": row.get("cost_source"),
                 **realized.to_dict(),
             }
             detail_rows.append(out)
@@ -267,6 +299,7 @@ def main():
     summary = {
         "source_csv": os.path.relpath(args.source_csv, str(PROJECT_ROOT)),
         "policy": args.policy,
+        "horizon_days": args.horizon_days,
         "rows": int(len(work_df)),
         "actual_col": actual_col,
         "strategies": {

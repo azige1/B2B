@@ -1,3 +1,2 @@
 scope_type,scope_key,lead_time_days,min_batch_qty,increment_batch_qty,max_replenish_qty,safety_stock_ratio,unit_price_ratio_to_price_tag,unit_cost_ratio_to_price_tag,holding_cost_ratio_per_day_to_unit_cost,salvage_ratio_to_unit_cost,stockout_penalty_per_unit,other_fixed_cost,target_sell_through_rate,lifecycle_days_assumption,cost_fallback_rule
 global,*,7,100,10,,0.00,1.00,0.142857,0.000,0.00,0,0,0.85,45,price_tag_div_7_when_cost_missing
-category,outerwear,7,100,10,,0.05,1.00,0.142857,0.000,0.00,0,0,0.85,45,price_tag_div_7_when_cost_missing
