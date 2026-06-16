@@ -1,94 +1,71 @@
 # Docs Index
 
-## What To Read First
+## Default Reading Order
 
-If you only need the current official state, read these in order:
+For current project status:
 
 1. `PROJECT_INDEX.md`
-2. `reports/current/current_mainline.json`
-3. `reports/current/current_freeze_summary.md`
-4. `reports/current/phase8_restart_playbook_20260409.md`
+2. `reports/current/phase8_blockbuster_uplift_0p6_20260616.md`
+3. `reports/current/server_whitelist_refresh_20260616.md`
+4. `reports/current/server_daily_oracle_snapshot_automation_20260616.md`
 5. `RUNNERS_INDEX.md`
+6. `data/DATA_INDEX.md`
+7. `MODELS_INDEX.md`
 
-These five files are the canonical current entry points.
+For the profit-analysis module:
 
-If you need the current proposal for the second project module, also read:
+1. `modules/profit_analysis/README.md`
+2. `modules/profit_analysis/docs/profit_analysis_module_v1_detailed_design_20260522.md`
+3. `modules/profit_analysis/docs/profit_analysis_module_delivery_20260612.md`
+4. `modules/profit_analysis/docs/profit_analysis_v0_client_feedback_rules_20260515.md`
 
-6. `modules/profit_analysis/docs/盈亏分析模块V1技术方案_20260410.md`
+## Current Canonical Documents
 
-## Current Official State
+Prediction:
 
-- Official phase: `phase7`
-- Official status: `frozen`
-- Official tree family: `LightGBM`
-- Current exploratory direction: `event + inventory`
-- Current best phase8 exploratory baseline: `event_inventory_zero_split`
+- `reports/current/phase8_blockbuster_uplift_0p6_20260616.md`
+- `reports/current/phase8_event_coverage_router_0p6_20260616.md`
+- `reports/current/phase8_no_listing_0p6_series_candidate_20260616.md`
+- `reports/current/phase8_final_freeze_report_20260616.md`
 
-## Current Working Rules
+Data:
 
-- Use `reports/current/` for current conclusions.
-- Use `PROJECT_INDEX.md` as the top-level current status page.
-- Use `RUNNERS_INDEX.md` for executable entry points.
-- Use `DOCS_INDEX.md` when you need to know which document is canonical and which is only historical context.
+- `data/current_assets.json`
+- `data/manifests/phase8_data_snapshot_20260616.json`
+- `reports/current/server_whitelist_refresh_20260616.md`
+- `reports/current/server_daily_oracle_snapshot_automation_20260616.md`
+- `reports/current/client_source_table_registry.md`
+- `reports/current/phase8_data_semantics_20260614.md`
 
-## Current Execution Entry Points
+Profit analysis:
 
-- Official freeze refresh:
-  - `python scripts/runners/phase7/run_phase7_freeze.py`
-- Official compare refresh:
-  - `python scripts/runners/phase7/run_phase7i_full_model_compare.py`
-- Phase8 prep:
-  - `python scripts/runners/phase8/run_phase8a_prep.py`
-- Phase8 inventory constraint pack:
-  - `python scripts/runners/phase8/run_phase8f_inventory_constraint_pack.py`
-- Profit analysis prototype:
-  - `python modules/profit_analysis/scripts/run_profit_analysis_snapshot.py`
-- Profit analysis input builder:
-  - `python modules/profit_analysis/scripts/build_profit_analysis_inputs.py --prediction-csv <your_prediction_csv>`
-- Profit analysis prediction normalizer:
-  - `python modules/profit_analysis/scripts/normalize_prediction_snapshot.py --source-csv <your_raw_prediction_csv>`
-- Profit analysis backtest:
-  - `python modules/profit_analysis/scripts/backtest_profit_analysis.py --source-csv <your_raw_prediction_csv>`
+- `modules/profit_analysis/README.md`
+- `modules/profit_analysis/docs/profit_analysis_module_v1_detailed_design_20260522.md`
+- `modules/profit_analysis/docs/profit_analysis_module_delivery_20260612.md`
 
 ## Document Roles
 
-- `PROJECT_INDEX.md`
-  - top-level current project status
-- `RUNNERS_INDEX.md`
-  - runner entry points and reproduction paths
-- `reports/current/current_freeze_summary.md`
-  - current official freeze explanation
-- `reports/current/phase8_restart_playbook_20260409.md`
-  - phase8 restart conditions and replay entry points
-- `modules/profit_analysis/docs/盈亏分析模块V1技术方案_20260410.md`
-  - current recommended Chinese V1 design for the profit analysis module
-- `modules/profit_analysis/docs/profit_analysis_data_mapping_20260410.md`
-  - current field-to-data-source mapping for profit analysis V1
-- `modules/profit_analysis/README.md`
-  - module-local index for profit-analysis code, docs, configs, and scripts
-- `盈亏分析模块V1技术方案.md`
-  - root-level shortcut for the current profit-analysis proposal
-- `PROJECT_OVERVIEW.md`
-  - broader project background; useful, but not the current canonical state page
-- `REPO_MAP.md`
-  - structural map of the repository; useful for orientation, not for current-state decisions
-- `AGENTS.md`
-  - execution and repository working rules for agent work
+- `readme.md`: short project landing page for GitHub and handoff.
+- `PROJECT_INDEX.md`: top-level current status and module boundaries.
+- `DOCS_INDEX.md`: canonical document routing.
+- `RUNNERS_INDEX.md`: executable entry points and reproduction commands.
+- `MODELS_INDEX.md`: model artifact map and current-vs-experiment distinction.
+- `data/DATA_INDEX.md`: data source, snapshot, and downstream rebuild status.
+- `reports/REPORTS_INDEX.md`: report directory map.
 
 ## Historical Material
 
-Use these only when reproducing or auditing history:
+Use these only for reproduction or audit:
 
-- `reports/phase5*/`
-- `reports/phase6*/`
-- `reports/phase7*/`
-- `scripts/runners/phase5/`
-- `scripts/runners/phase6/`
-- `scripts/runners/phase7/`
-- `scripts/runners/phase8/`
+- `reports/phase1/` to `reports/phase7*/`
+- older `reports/phase8_*` experiments not referenced by `PROJECT_INDEX.md`
+- `scripts/runners/phase5/`, `scripts/runners/phase6/`, `scripts/runners/phase7/`
+- old root-level training scripts retained for historical context
 
 ## What Not To Assume
 
-- Do not assume the old LSTM documentation describes the current official mainline.
-- Do not treat historical phase runners as current recommended entry points.
-- Do not treat all root markdown files as equal; current-state authority lives in `PROJECT_INDEX.md` and `reports/current/`.
+- Do not assume LSTM docs describe the current mainline.
+- Do not assume Phase7 is still the best current result; it is the historical frozen baseline.
+- Do not assume all Phase8 experiment directories are current candidates.
+- Do not assume the latest raw `6_16` data has rebuilt silver/gold or retrained models.
+- Do not treat `V_IRS_ORDER` as a label source.

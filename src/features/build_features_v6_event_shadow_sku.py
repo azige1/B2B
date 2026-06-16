@@ -42,6 +42,18 @@ EVENT_COLS = [
     "event_cart_to_order_rate_30",
     "event_order_to_pay_rate_30",
 ]
+EVENT_CORE_COLS = [
+    "event_active_buyers_7",
+    "event_active_buyers_30",
+    "event_cart_adds_7",
+    "event_cart_adds_30",
+    "event_order_success_7",
+    "event_order_success_30",
+    "event_pay_qty_7",
+    "event_pay_qty_30",
+    "event_days_since_last_any",
+    "event_days_since_last_strong",
+]
 
 
 def rolling_sum_matrix(matrix, window):
@@ -77,8 +89,10 @@ def safe_rate(num, den):
 
 def load_base_paths(split_date):
     tag = split_date.replace("-", "")
-    base_tag = f"p7b_{tag}_v6_event"
-    output_tag = f"p8shadow_{tag}_v6_event"
+    base_prefix = os.environ.get("PHASE8_EVENT_BASE_PREFIX", "p7b").strip()
+    output_prefix = os.environ.get("PHASE8_EVENT_OUTPUT_PREFIX", "p8shadow").strip()
+    base_tag = f"{base_prefix}_{tag}_v6_event"
+    output_tag = f"{output_prefix}_{tag}_v6_event"
     base_processed = PROJECT_ROOT / "data" / f"processed_v6_event_{base_tag}"
     base_artifacts = PROJECT_ROOT / "data" / f"artifacts_v6_event_{base_tag}"
     out_processed = PROJECT_ROOT / "data" / f"processed_v6_event_{output_tag}"
@@ -291,7 +305,22 @@ def main():
     static_source["style_id"] = static_source["style_id"].fillna("Unknown").astype(str)
     style_by_sku = dict(zip(static_source["sku_id"], static_source["style_id"]))
 
-    all_dates = pd.date_range("2025-01-01", "2025-12-31", freq="D").date
+    calendar_start = base_meta.get("calendar_start")
+    calendar_end = base_meta.get("calendar_end")
+    if not calendar_start or not calendar_end:
+        calendar_mode = os.environ.get("PHASE8_EVENT_CALENDAR_MODE", "2025_only").strip().lower()
+        if calendar_mode == "extended":
+            calendar_start = str(pd.to_datetime(gold["date"]).min().date())
+            calendar_end = str(pd.to_datetime(gold["date"]).max().date())
+        elif calendar_mode == "2025_only":
+            calendar_start = "2025-01-01"
+            calendar_end = "2025-12-31"
+        else:
+            raise ValueError(
+                f"Unsupported PHASE8_EVENT_CALENDAR_MODE={calendar_mode}. "
+                "Expected one of: 2025_only, extended."
+            )
+    all_dates = pd.date_range(calendar_start, calendar_end, freq="D").date
     date_to_idx = {d: i for i, d in enumerate(all_dates)}
     split_date_obj = pd.to_datetime(split_date).date()
     end_idx = len(all_dates) - FORECAST
@@ -389,8 +418,10 @@ def main():
     meta["feature_cols"] = list(base_meta["feature_cols"]) + EVENT_COLS
     feature_groups = dict(base_meta["feature_groups"])
     feature_groups["event"] = EVENT_COLS
+    feature_groups["event_core"] = EVENT_CORE_COLS
     meta["feature_groups"] = feature_groups
     meta["event_cols"] = EVENT_COLS
+    meta["event_core_cols"] = EVENT_CORE_COLS
     meta["shadow_base_tag"] = paths["base_tag"]
     meta["shadow_source"] = "data/phase8a_prep/event_intent_daily_features.csv"
     with open(paths["out_artifacts"] / "meta_v6_event.json", "w", encoding="utf-8") as fh:

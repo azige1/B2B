@@ -4,6 +4,8 @@
   "mainline_candidate": "tail_full_lr005_l63_g027_n800_s2028 + sep098_oct093",
   "feature_family": "v6_event",
   "feature_set": "cov_activity_tail_full",
+  "raw_order_baseline": "data_warehouse/fact_orders/V_IRS_ORDERFTP_6_16.csv",
+  "raw_order_baseline_note": "Latest complete V_IRS_ORDERFTP refresh checkpoint as of 2026-06-16. The file is canonical raw order data; server V_IRS_ORDER/order_history increments are excluded. Silver/gold assets have not yet been rebuilt on top of this snapshot.",
   "gold_wide_table": "data/gold/wide_table_sku.csv",
   "gold_universe_note": "cleaned gold; SKUs missing from data/silver/clean_products.csv are excluded from the current official universe",
   "official_reports": {

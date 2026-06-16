@@ -1,0 +1,36 @@
+{
+  "status": "shadow_router_exploration",
+  "anchors": [
+    "2025-09-01",
+    "2025-10-01",
+    "2025-11-01",
+    "2025-12-01"
+  ],
+  "best_candidate_key": "router_phase7_anchor_event_covered",
+  "best_summary": {
+    "candidate_key": "router_phase7_anchor_event_covered",
+    "router_rule": "anchor_event_covered",
+    "router_fallback": "phase7",
+    "event_use_rate": 0.75,
+    "global_ratio": 1.0198492352492323,
+    "global_wmape": 0.6590521676867911,
+    "under_wape": 0.31960146621877933,
+    "over_wape": 0.3394507014680117,
+    "false_positive_rate_zero_true": 0.15645560130135022,
+    "zero_true_pred_ge_3_rate": 0.0145398666145235,
+    "4_25_under_wape": 0.34656766211303147,
+    "ice_4_25_sku_p50": 0.5981425138069462,
+    "blockbuster_under_wape": 0.3819732548025686,
+    "blockbuster_sku_p50": 0.595706117895437,
+    "rank_corr_positive_skus": 0.8078380186536347,
+    "top20_true_volume_capture": 0.6524430436550572,
+    "1_3_ratio": 1.2758658087999175,
+    "improvement_pct_vs_phase7": 3.9713975078907846
+  },
+  "outputs": {
+    "candidate_summary": "reports\\phase8_event_request_router\\phase8_event_request_router_candidate_summary.csv",
+    "anchor_table": "reports\\phase8_event_request_router\\phase8_event_request_router_anchor_table.csv",
+    "summary_md": "reports\\phase8_event_request_router\\phase8_event_request_router_summary.md",
+    "best_context": "reports\\phase8_event_request_router\\phase8_event_request_router_best_context.csv"
+  }
+}

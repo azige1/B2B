@@ -1,78 +1,107 @@
 # B2B Replenishment System
 
-服装 B2B 补货预测研究与交付工作区。
+服装 B2B 补货预测与盈亏分析项目工作区。
 
 ## Current Status
 
-- 当前官方阶段: `phase7`
-- 当前官方状态: `frozen`
-- 当前官方主线: `tail_full_lr005_l63_g027_n800_s2028 + sep098_oct093`
-- 当前官方树模型家族: `LightGBM`
-- 当前 `phase8` 工作方向: `event + inventory`
-- 当前 `phase8` 最优探索基线: `event_inventory_zero_split`
+当前项目已经从早期 LSTM 探索，演进到以树模型为主的补货预测系统，并拆出了独立的盈亏分析模块。
 
-当前仓库已经不是早期的 LSTM 主线仓库。LSTM 相关内容主要保留为历史实验与对照参考，当前官方主线是树模型。
+预测主线当前阶段性结论：
+
+- Phase7 是历史冻结基线，旧 `0.6` 评估口径下 `global_wmape=0.6863`。
+- Phase8 推荐候选为 `coverage_router + conservative_blockbuster_uplift`。
+- Phase8 推荐候选在旧 `0.6` 四锚点口径下 `global_wmape=0.6482`，相对 Phase7 改善约 `5.56%`。
+- 爆款低估指标 `blockbuster_under_wape=0.3101`，相对 Phase7 的 `0.4165` 改善约 `25.55%`。
+
+数据工程当前状态：
+
+- 正式订单流水和训练标签源只使用 `V_IRS_ORDERFTP`。
+- 新服务器 `121.40.254.36` 已打通甲方 Oracle 白名单。
+- 服务器已配置每日自动取数任务。
+- 本地最新原始订单快照为 `data_warehouse/fact_orders/V_IRS_ORDERFTP_6_16.csv`。
+- 注意：`6_16` 原始数据已同步，但 silver/gold 和模型还未基于该快照重建。
 
 ## Start Here
 
-如果只想快速了解当前状态，按这个顺序看：
+只想快速了解当前状态时，按这个顺序读：
 
-1. `DOCS_INDEX.md`
-2. `PROJECT_INDEX.md`
-3. `reports/current/current_mainline.json`
-4. `reports/current/current_freeze_summary.md`
-5. `reports/current/phase8_restart_playbook_20260409.md`
-6. `RUNNERS_INDEX.md`
+1. `PROJECT_INDEX.md`
+2. `DOCS_INDEX.md`
+3. `reports/current/phase8_blockbuster_uplift_0p6_20260616.md`
+4. `reports/current/server_whitelist_refresh_20260616.md`
+5. `reports/current/server_daily_oracle_snapshot_automation_20260616.md`
+6. `modules/profit_analysis/README.md`
+7. `RUNNERS_INDEX.md`
 
 ## Repository Layout
 
 ```text
 B2B_Replenishment_System/
-├── src/                    # 核心代码: etl / features / train / analysis / inference
-├── scripts/
-│   ├── runners/            # phase5 ~ phase8 runner
-│   ├── analysis/           # 历史分析辅助脚本
-│   ├── diagnostic/         # 仓库与实验自检脚本
-│   └── eval/               # 辅助评估脚本
-├── reports/                # 当前结论、阶段报告、历史实验报告
-├── data/                   # 当前数据资产映射与本地处理产物
-├── data_warehouse/         # 原始抽取与快照数据
-├── models/                 # 当前官方模型资产
-├── config/                 # 配置文件
-└── docs/                   # 其他说明文档
+|-- src/                    Core ETL, feature, training, analysis, inference code
+|-- scripts/                Reproducible runners, data scripts, demos
+|-- modules/
+|   `-- profit_analysis/    Independent profit-analysis module
+|-- data/                   Current asset registry, manifests, processed assets
+|-- data_warehouse/         Raw and snapshot source tables
+|-- reports/
+|   |-- current/            Current conclusions and handoff documents
+|   `-- phase*/             Historical or experiment-specific outputs
+|-- models/                 Historical frozen official model assets
+|-- models_phase8_*/        Phase8 experiment model artifacts
+|-- config/                 Configuration files
+|-- docs/                   Additional documentation
+`-- tests/                  Tests and smoke checks
 ```
 
-## Common Entry Points
+## Current Main Artifacts
+
+Prediction:
+
+- `reports/current/phase8_blockbuster_uplift_0p6_20260616.md`
+- `reports/phase8_blockbuster_uplift_0p6/phase8_blockbuster_uplift_candidate_summary.csv`
+- `reports/phase8_blockbuster_uplift_0p6/phase8_blockbuster_uplift_recommended_context.csv`
+- `src/analysis/analyze_phase8u_blockbuster_uplift.py`
+
+Data:
+
+- `data/current_assets.json`
+- `data/manifests/phase8_data_snapshot_20260616.json`
+- `reports/current/server_whitelist_refresh_20260616.md`
+- `reports/current/server_daily_oracle_snapshot_automation_20260616.md`
+
+Profit analysis:
+
+- `modules/profit_analysis/README.md`
+- `modules/profit_analysis/docs/profit_analysis_module_v1_detailed_design_20260522.md`
+- `modules/profit_analysis/docs/profit_analysis_module_delivery_20260612.md`
+- `modules/profit_analysis/scripts/run_skc_profit_snapshot.py`
+
+## Common Commands
+
+Run Phase8 blockbuster uplift analysis from existing prediction contexts:
 
 ```bash
-# 刷新当前官方 freeze 摘要
-python scripts/runners/phase7/run_phase7_freeze.py
-
-# 刷新当前官方 compare 页面
-python scripts/runners/phase7/run_phase7i_full_model_compare.py
-
-# 运行 phase8 准备分析
-python scripts/runners/phase8/run_phase8a_prep.py
-
-# 运行 phase8 库存约束分析
-python scripts/runners/phase8/run_phase8f_inventory_constraint_pack.py
-
-# 仓库卫生检查
-python scripts/diagnostic/check_git_hygiene.py
+python src/analysis/analyze_phase8u_blockbuster_uplift.py
 ```
 
-如果只是阅读当前结论，优先直接看 `reports/current/`，不要先从历史 phase 报告开始。
+Inspect current data assets:
 
-## Documentation Rules
+```bash
+python -m json.tool data/current_assets.json
+python -m json.tool data/manifests/phase8_data_snapshot_20260616.json
+```
 
-- 当前状态判断以 `PROJECT_INDEX.md` 和 `reports/current/` 为准。
-- 执行入口以 `RUNNERS_INDEX.md` 为准。
-- 历史阶段报告主要在 `reports/phase5*/`, `reports/phase6*/`, `reports/phase7*/`。
-- 历史 runner 主要在 `scripts/runners/phase5/` 到 `scripts/runners/phase8/`。
-- 旧的 LSTM 背景说明可以作为历史上下文阅读，但不代表当前官方主线。
+Run profit-analysis production-style snapshot:
 
-## Versioning Rules
+```bash
+python modules/profit_analysis/scripts/run_skc_profit_snapshot.py --prediction-csv <prediction.csv> --inventory-csv <inventory.csv> --economics-csv <economics.csv>
+```
 
-- Git 主要跟踪源码、配置、关键结论文档和当前入口文档。
-- 大部分原始数据、处理中间产物、模型二进制和导出报表默认不纳入版本库。
-- 当前官方参考入口已经收敛到 `DOCS_INDEX.md`, `PROJECT_INDEX.md`, `RUNNERS_INDEX.md`, `reports/current/`。
+## Working Rules
+
+- Use `reports/current/` and `PROJECT_INDEX.md` for current conclusions.
+- Use `RUNNERS_INDEX.md` for executable entry points.
+- Treat `reports/phase*/` and `models_phase8_*/` as historical or experiment-specific unless explicitly referenced by current docs.
+- Do not use `V_IRS_ORDER` or server daily `order_history` files as training labels.
+- Do not assume the latest raw data has already rebuilt downstream silver/gold assets.
+- Do not delete or move historical experiment artifacts without writing a manifest first.

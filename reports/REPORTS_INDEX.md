@@ -1,48 +1,63 @@
 # Reports Index
 
-## Current Official Reports
+## Current Reports
 
-- `current/`
-  - Canonical entry point for the current official model state.
-  - Preferred for internal references, handoff, and external reporting.
+Use `reports/current/` for current conclusions, handoff, and external-facing summaries.
 
-## Current Official Source Directories
+Most important current files:
 
-- `phase7/`
-  - Official phase freeze documents for the current mainline.
-- `phase7i_full_model_compare/`
-  - Official full December comparison source for the current mainline.
+- `current/phase8_blockbuster_uplift_0p6_20260616.md`
+- `current/phase8_event_coverage_router_0p6_20260616.md`
+- `current/phase8_no_listing_0p6_series_candidate_20260616.md`
+- `current/phase8_final_freeze_report_20260616.md`
+- `current/server_whitelist_refresh_20260616.md`
+- `current/server_daily_oracle_snapshot_automation_20260616.md`
+- `current/client_source_table_registry.md`
+- `current/phase8_data_semantics_20260614.md`
+
+## Current Phase8 Output Directories
+
+- `phase8_blockbuster_uplift_0p6/`
+  - Current recommended Phase8 uplift candidate summaries and contexts.
+- `phase8_event_request_router/`
+  - Coverage-router comparison and best context.
+- `phase8_event_request_shadow/`
+  - Event+request shadow branch outputs.
+- `phase8_purchase_request_shadow/`
+  - Purchase-request shadow branch outputs.
+- `phase8_data_audit/`
+  - Server data audit outputs.
+
+## Profit Analysis Reports
+
+Current useful directories:
+
+- `profit_analysis_skc_real_cost_h45_20260612/`
+- `profit_analysis_skc_real_data_20260612/`
+- `profit_analysis_real_data_20260612/`
+- `profit_analysis_snapshot_smoke_final/`
+
+Prefer module docs first:
+
+- `modules/profit_analysis/README.md`
+- `modules/profit_analysis/docs/profit_analysis_module_v1_detailed_design_20260522.md`
+- `modules/profit_analysis/docs/profit_analysis_module_delivery_20260612.md`
 
 ## Historical Phase Results
 
+These are retained for reproduction and audit:
+
+- `phase1/`, `phase2/`, `phase3/`
 - `phase5*/`
-  - Tree build-up, anchor backtests, sweeps, and delivery-calibration history.
 - `phase6*/`
-  - Tree stabilization, validation, family compare, and prior readable-report history.
+- `phase7*/`
+- older `phase8_*` directories not listed as current
+- `rolling_backtest/`
+- `eval_history/`
 
-## Analysis And Experiment Outputs
+## Reading Rule
 
-- `phase7_tail_allocation_optimization/`
-  - Tail/allocation experiments, including overnight runs and sweep outputs.
-- `phase8a_prep/`
-  - Pre-client-reply phase8 preparation outputs: coverage audit, standardized feature tables, SHAP, and residual-gap diagnostics.
-- `*_readable_report`
-  - Single-period readable reports and dashboards.
-- `*_full_model_compare`
-  - Rich comparison pages and CSV exports.
-- `overnight_*`
-  - Long-run experiment artifacts and logs.
-
-## Historical Reference Only
-
-- `phase6h_december_readable_report`
-- `phase7h_december_readable_report`
-
-These remain valid history, but they are no longer the default report entry points.
-
-## Default Reading Order
-
-1. `current/`
-2. `phase7/`
-3. `phase7i_full_model_compare/`
-4. Historical phase or experiment directories only when needed
+- Start from `current/`.
+- Only enter a phase directory if a current report references it or you are reproducing that specific phase.
+- Do not infer current status from directory freshness alone.
+- Generated report directories are not automatically current just because they are newer.

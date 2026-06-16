@@ -1,0 +1,177 @@
+{
+  "snapshot_id": "phase8_20260616_oracle_direct",
+  "cutoff_date": "2026-06-16",
+  "created_at_utc": "2026-06-16T08:32:18.937298+00:00",
+  "source_root": "data\\incoming\\server_20260616\\client_snapshot_20260616",
+  "oracle_export_created_at_utc": "2026-06-16T08:28:07.735829+00:00",
+  "policy": {
+    "canonical_order_table": "V_IRS_ORDERFTP",
+    "excluded_order_sources": [
+      "V_IRS_ORDER",
+      "*_order_history.csv"
+    ],
+    "mainline_tables": [
+      "V_IRS_ORDERFTP",
+      "V_IRS_STORAGE",
+      "V_IRS_B2BSTORAGE",
+      "V_IRS_EVENT",
+      "V_IRS_PRODUCT"
+    ],
+    "shadow_only_tables": [
+      "V_IRS_CUS_PROFILE"
+    ],
+    "mapping_only_tables": [
+      "V_IRS_STORE"
+    ],
+    "diagnostic_only_tables": [
+      "V_IRS_PREORDER"
+    ],
+    "backup_only_tables_left_in_incoming": [
+      "V_IRS_ORDER"
+    ],
+    "note": "Oracle direct export is live per-table extraction, not a database-level consistent snapshot."
+  },
+  "sources": [
+    {
+      "name": "order_flow",
+      "table": "V_IRS_ORDERFTP",
+      "role": "canonical_label_and_order_history",
+      "file_count": 1,
+      "total_bytes": 26044769,
+      "copied": 1,
+      "already_identical": 0
+    },
+    {
+      "name": "event_full",
+      "table": "V_IRS_EVENT",
+      "role": "phase8_main_feature",
+      "file_count": 1,
+      "total_bytes": 71095362,
+      "copied": 1,
+      "already_identical": 0
+    },
+    {
+      "name": "product",
+      "table": "V_IRS_PRODUCT",
+      "role": "phase8_main_dimension_and_listing_date",
+      "file_count": 1,
+      "total_bytes": 4560725,
+      "copied": 1,
+      "already_identical": 0
+    },
+    {
+      "name": "storage_inventory",
+      "table": "V_IRS_STORAGE",
+      "role": "phase8_main_feature_current_snapshot",
+      "file_count": 1,
+      "total_bytes": 822065,
+      "copied": 1,
+      "already_identical": 0
+    },
+    {
+      "name": "b2b_inventory",
+      "table": "V_IRS_B2BSTORAGE",
+      "role": "phase8_main_feature_current_snapshot",
+      "file_count": 1,
+      "total_bytes": 106001,
+      "copied": 1,
+      "already_identical": 0
+    },
+    {
+      "name": "store",
+      "table": "V_IRS_STORE",
+      "role": "mapping_and_audit_only",
+      "file_count": 1,
+      "total_bytes": 121792,
+      "copied": 1,
+      "already_identical": 0
+    },
+    {
+      "name": "customer_profile",
+      "table": "V_IRS_CUS_PROFILE",
+      "role": "shadow_only_not_phase8_mainline",
+      "file_count": 1,
+      "total_bytes": 118858,
+      "copied": 1,
+      "already_identical": 0
+    },
+    {
+      "name": "preorder",
+      "table": "V_IRS_PREORDER",
+      "role": "diagnostic_only",
+      "file_count": 1,
+      "total_bytes": 34191,
+      "copied": 1,
+      "already_identical": 0
+    }
+  ],
+  "files": [
+    {
+      "source": "data\\incoming\\server_20260616\\client_snapshot_20260616\\V_IRS_ORDERFTP.csv",
+      "destination": "data_warehouse\\fact_orders\\V_IRS_ORDERFTP_6_16.csv",
+      "bytes": 26044769,
+      "sha256": "c2841aeebe3a10a2b0d5583b00d3f46f9169392fb9b21d09529c24a223ce9dfa",
+      "status": "copied"
+    },
+    {
+      "source": "data\\incoming\\server_20260616\\client_snapshot_20260616\\V_IRS_EVENT.csv",
+      "destination": "data_warehouse\\fact_events\\V_IRS_EVENT_20260616.csv",
+      "bytes": 71095362,
+      "sha256": "7bde4766436e35a83fc37d796bec545cd001b1ac092a0db82e16c305d484071d",
+      "status": "copied"
+    },
+    {
+      "source": "data\\incoming\\server_20260616\\client_snapshot_20260616\\V_IRS_PRODUCT.csv",
+      "destination": "data_warehouse\\dim_product\\product_info_20260616.csv",
+      "bytes": 4560725,
+      "sha256": "2af8eb5234302e6d8bdf4271548945a59906a16d7f5e46ce718a7b2571b40b06",
+      "status": "copied"
+    },
+    {
+      "source": "data\\incoming\\server_20260616\\client_snapshot_20260616\\V_IRS_STORAGE.csv",
+      "destination": "data_warehouse\\snapshot_inventory\\20260616_storage_stock.csv",
+      "bytes": 822065,
+      "sha256": "1f2ca3fcd59df328b8f3a621e5d954b846739d25f8505cd867fe1df0c855211f",
+      "status": "copied"
+    },
+    {
+      "source": "data\\incoming\\server_20260616\\client_snapshot_20260616\\V_IRS_B2BSTORAGE.csv",
+      "destination": "data_warehouse\\snapshot_inventory\\20260616_b2b_stock.csv",
+      "bytes": 106001,
+      "sha256": "a6551e5b47a37d4a0a93a10490ae8bec944557e5c3466daf8c7127c1dc0f21ad",
+      "status": "copied"
+    },
+    {
+      "source": "data\\incoming\\server_20260616\\client_snapshot_20260616\\V_IRS_STORE.csv",
+      "destination": "data_warehouse\\dim_store\\store_info_20260616.csv",
+      "bytes": 121792,
+      "sha256": "dd288d4c71f0042a438950ab918332365cf2f678f923d97cd2bd7e8e291adc1f",
+      "status": "copied"
+    },
+    {
+      "source": "data\\incoming\\server_20260616\\client_snapshot_20260616\\V_IRS_CUS_PROFILE.csv",
+      "destination": "data_warehouse\\snapshot_metrics\\20260616_customer_profile.csv",
+      "bytes": 118858,
+      "sha256": "2e9d418f1280eec31755dc66d9863eb60ee6a4a2f2fdc146d2b4f8eafd26bcc0",
+      "status": "copied"
+    },
+    {
+      "source": "data\\incoming\\server_20260616\\client_snapshot_20260616\\V_IRS_PREORDER.csv",
+      "destination": "data_warehouse\\fact_orders\\20260616_b2b_preorder.csv",
+      "bytes": 34191,
+      "sha256": "aca0bae9e664759d209a7c7f1abda2e71ab98c92467c49a2e5f14aea9b3cbb1a",
+      "status": "copied"
+    }
+  ],
+  "raw_export_rows": {
+    "V_IRS_ORDERFTP.csv": 337837,
+    "V_IRS_PRODUCT.csv": 28853,
+    "V_IRS_STORAGE.csv": 6664,
+    "V_IRS_B2BSTORAGE.csv": 3455,
+    "V_IRS_EVENT.csv": 567825,
+    "V_IRS_STORE.csv": 1591,
+    "V_IRS_CUS_PROFILE.csv": 1559,
+    "V_IRS_PREORDER.csv": 314,
+    "V_IRS_ORDER.csv": 461920
+  }
+}

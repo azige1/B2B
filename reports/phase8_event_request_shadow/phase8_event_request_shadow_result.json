@@ -1,0 +1,74 @@
+{
+  "status": "shadow_only_no_replace",
+  "anchors": [
+    "2025-09-01",
+    "2025-10-01",
+    "2025-11-01",
+    "2025-12-01"
+  ],
+  "event_request_anchors": [
+    "2025-10-01",
+    "2025-11-01",
+    "2025-12-01"
+  ],
+  "current_all_summary": {
+    "candidate_key": "phase7_current",
+    "track": "current_calibrated_mainline",
+    "global_ratio": 1.0159014130205795,
+    "global_wmape": 0.6863081942080186,
+    "4_25_under_wape": 0.35661798724060306,
+    "4_25_sku_p50": 0.6588079054670651,
+    "ice_4_25_sku_p50": 0.5852749149547938,
+    "blockbuster_under_wape": 0.4164747276403632,
+    "blockbuster_sku_p50": 0.5539348598759131,
+    "top20_true_volume_capture": 0.6493784382904072,
+    "rank_corr_positive_skus": 0.8044162050785597,
+    "1_3_ratio": 1.2998972915404479
+  },
+  "event_request_all_summary": {
+    "candidate_key": "event_request_plus",
+    "track": "cov_activity_tail_full_event_request",
+    "global_ratio": 1.0189073499518755,
+    "global_wmape": 0.6619851176404025,
+    "4_25_under_wape": 0.3466781551767375,
+    "4_25_sku_p50": 0.663616779924108,
+    "ice_4_25_sku_p50": 0.5979948523514076,
+    "blockbuster_under_wape": 0.3886573313917804,
+    "blockbuster_sku_p50": 0.5891101709474298,
+    "top20_true_volume_capture": 0.6518050080452256,
+    "rank_corr_positive_skus": 0.8069906082069724,
+    "1_3_ratio": 1.2824083067837877
+  },
+  "current_event_covered_summary": {
+    "candidate_key": "phase7_current",
+    "track": "current_calibrated_mainline_event_covered",
+    "global_ratio": 0.9947545325739182,
+    "global_wmape": 0.6677769496830974,
+    "4_25_under_wape": 0.3741188786330835,
+    "4_25_sku_p50": 0.6375376939560868,
+    "ice_4_25_sku_p50": 0.5598788129300305,
+    "blockbuster_under_wape": 0.3853157266945606,
+    "blockbuster_sku_p50": 0.5774397110173465,
+    "top20_true_volume_capture": 0.6597010384466517,
+    "rank_corr_positive_skus": 0.8094448678011429,
+    "1_3_ratio": 1.2388591218589045
+  },
+  "event_request_summary": {
+    "candidate_key": "event_request_plus",
+    "track": "cov_activity_tail_full_event_request",
+    "global_ratio": 1.0000182955454553,
+    "global_wmape": 0.6314355809881275,
+    "4_25_under_wape": 0.3607184451296548,
+    "4_25_sku_p50": 0.6452557902018408,
+    "ice_4_25_sku_p50": 0.577035611399567,
+    "blockbuster_under_wape": 0.3393137629108345,
+    "blockbuster_sku_p50": 0.6331347217100451,
+    "top20_true_volume_capture": 0.6637871789328517,
+    "rank_corr_positive_skus": 0.8140072859012428,
+    "1_3_ratio": 1.2068171448715308
+  },
+  "outputs": {
+    "anchor_table": "reports\\phase8_event_request_shadow\\phase8_event_request_shadow_anchor_table.csv",
+    "summary_md": "reports\\phase8_event_request_shadow\\phase8_event_request_shadow_summary.md"
+  }
+}

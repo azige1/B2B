@@ -1,45 +1,105 @@
 # Data Index
 
-## Base Layers
+## Source Of Truth
 
-- `raw/`
-  - Imported source data before cleaned joins and modeling transforms.
+Official order flow and label source:
+
+```text
+V_IRS_ORDERFTP
+```
+
+Do not use `V_IRS_ORDER` or server daily `order_history` files as training labels.
+
+## Current Raw Snapshots
+
+Current raw-order checkpoint:
+
+```text
+../data_warehouse/fact_orders/V_IRS_ORDERFTP_6_16.csv
+```
+
+Current event checkpoint:
+
+```text
+../data_warehouse/fact_events/V_IRS_EVENT_20260616.csv
+```
+
+Current product checkpoint:
+
+```text
+../data_warehouse/dim_product/product_info_20260616.csv
+```
+
+Snapshot manifest:
+
+```text
+manifests/phase8_data_snapshot_20260616.json
+```
+
+Asset registry:
+
+```text
+current_assets.json
+```
+
+Important limitation:
+
+- The `6_16` raw snapshot is synced and audited.
+- `silver/` and `gold/` have not yet been rebuilt on top of `6_16`.
+- Existing Phase8 metrics should not be described as retrained on `6_16`.
+
+## Layer Map
+
+- `incoming/`
+  - Downloaded server snapshots and raw handoff files.
+  - Keep as immutable intake evidence when possible.
+- `manifests/`
+  - Auditable snapshot manifests, source-to-destination mappings, row counts, hashes.
 - `silver/`
-  - Cleaned operational tables such as products, orders, stores, and buyer profile.
+  - Cleaned operational tables.
+  - Current historical silver may still reflect older raw snapshots.
 - `gold/`
-  - Canonical modeling-facing merged tables.
-  - Current official gold table: `gold/wide_table_sku.csv`
+  - Modeling-facing merged tables.
+  - Current official gold table remains `gold/wide_table_sku.csv`.
+- `processed_*` and `artifacts_*`
+  - Feature assets for specific phase/anchor experiments.
+  - Keep in place for compatibility with reports and runners.
 
-## Current Feature Assets
+## Current Data Reports
 
-- Current official feature family: `v6_event`
-- Current official feature set: `cov_activity_tail_full`
-- Current official phase7 anchor assets are the `p7b_*` processed/artifacts directories.
-- Canonical map: `current_assets.json`
+- `reports/current/server_whitelist_refresh_20260616.md`
+- `reports/current/server_daily_oracle_snapshot_automation_20260616.md`
+- `reports/current/phase8_data_semantics_20260614.md`
+- `reports/current/client_source_table_registry.md`
+- `reports/current/v_irs_orderftp_refresh_audit_20260614.md`
 
-## Experiment Assets
+## Server Automation
 
-- `processed_*`
-- `artifacts_*`
-- `phase8a_prep/`
-  - Pre-client-reply standardized feature tables for phase8 preparation.
+The replacement server exports a daily Oracle snapshot at Shanghai time `03:30`.
 
-These directories are retained in place for compatibility. They are indexed in:
+Server output pattern:
 
-- `experiment_asset_inventory.csv`
+```text
+/root/client_data_snapshots/client_snapshot_YYYYMMDD/
+/root/client_data_snapshots/client_snapshot_YYYYMMDD.tar.gz
+/root/client_data_snapshots/client_snapshot_YYYYMMDD.tar.gz.sha256
+```
 
-## Legacy Assets
+Local backup scripts:
 
-- Older `v3`, `v5`, `weekly`, and early `v6_event` asset directories remain available for audit and reproduction.
-- Legacy assets are not the default reference unless explicitly needed.
+- `scripts/data/server_run_daily_oracle_snapshot.sh`
+- `scripts/data/server_daily_oracle_snapshot.cron`
 
-## Current Universe Rule
+## Rebuild Rule
 
-- The current official universe uses cleaned gold.
-- SKUs that exist in orders but do not exist in `silver/clean_products.csv` are excluded from the current official gold scope.
+When switching the active training baseline to a new raw snapshot:
 
-## Working Rule
+1. Register the raw snapshot in `data/manifests/`.
+2. Update `data/current_assets.json`.
+3. Rebuild `silver/`.
+4. Rebuild `gold/`.
+5. Rebuild feature assets for the target anchors.
+6. Re-run Phase7 baseline and Phase8 candidate with the same evaluation口径.
+7. Write a report under `reports/current/`.
 
-- Do not move or rename base data paths in this cleanup step.
-- Use `current_assets.json` for current canonical references.
-- Use `experiment_asset_inventory.csv` for locating historical or experimental assets.
+Do not mix new raw order files with old feature assets when claiming model metrics.

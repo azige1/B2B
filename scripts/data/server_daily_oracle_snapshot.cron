@@ -1,0 +1,6 @@
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+MAILTO=""
+
+# Asia/Shanghai server time. Export client Oracle snapshot every day.
+30 3 * * * /root/run_daily_oracle_snapshot.sh >> /root/client_data_snapshots/logs/cron_daily_snapshot.log 2>&1
