@@ -88,6 +88,10 @@
 | --- | --- |
 | `sku_id` / `style_id` | 商品主键 |
 | `image_id` / `image_url` | 图片或图片引用 |
+| `image_type` | 主图/细节图/模特图/平铺图 |
+| `image_capture_date` | 图片拍摄或入库日期 |
+| `product_name` | 商品名称 |
+| `product_description` | 商品文案 |
 | `category` | 品类 |
 | `season` | 季节 |
 | `color_family` | 色系 |
@@ -102,6 +106,23 @@
 | `occasion` | 使用场景 |
 | `tag_source` | 人工/模型/人工复核 |
 | `tag_confidence` | 标签可信度 |
+| `prompt_version` | API 打标 prompt 版本 |
+| `model_version` | 多模态 API 或模型版本 |
+| `review_status` | 待复核/已复核/驳回 |
+| `reviewer_id` | 复核人 |
+| `review_time` | 复核时间 |
+
+### P0：标签字典
+
+| 字段 | 说明 |
+| --- | --- |
+| `label_group` | 标签组，如颜色/版型/面料/结构/风格 |
+| `label_name` | 标签名 |
+| `allowed_values` | 可选值 |
+| `definition` | 标签定义 |
+| `positive_examples` | 正例 |
+| `negative_examples` | 反例 |
+| `business_owner` | 业务负责人 |
 
 ### P1：用于评估标签价值的业务结果
 
@@ -112,8 +133,21 @@
 | `sell_through_rate` | 售罄率 |
 | `gross_margin` | 毛利 |
 | `inventory_leftover_qty` | 剩余库存 |
+| `lifecycle_start_date` | 生命周期开始 |
+| `lifecycle_end_date` | 生命周期结束 |
 | `return_qty` | 退货量，可选 |
 | `return_reason` | 退货原因，可选 |
+
+### P2：图片相似款和训练所需扩展
+
+| 字段 | 说明 |
+| --- | --- |
+| `historical_style_id` | 历史相似款 |
+| `similarity_label` | 人工确认相似/不相似 |
+| `visual_embedding_id` | 图片向量 ID |
+| `train_split` | train/valid/test |
+| `label_quality_score` | 标签质量评分 |
+| `annotation_batch_id` | 标注批次 |
 
 ## 4. 特殊节点字段
 
@@ -166,4 +200,3 @@ event_count_past_30d
 4. `transaction_price / settlement_price / unit_cost`：支撑盈亏模块从代理利润走向真实利润。
 5. `event calendar`：解决直播爆款、节日、订货会导致的大误差。
 6. `product gene table`：支撑商品识别量化、相似款生命周期和企划复盘。
-
