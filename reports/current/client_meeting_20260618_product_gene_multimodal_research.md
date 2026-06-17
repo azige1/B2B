@@ -491,3 +491,16 @@ review_time
 | V2 | 4-8周 | 接入预测 shadow 实验 | 冷启动/生命周期曲线增益报告 |
 | V3 | 后续 | 数据量扩大后训练或微调 | 专用标签模型或相似款 embedding |
 
+## 11. 成本补充
+
+260 个 SKU 规模下，API 费用不是主要成本。建议预算口径：
+
+| 档位 | 内容 | 粗估 |
+| --- | --- | ---: |
+| Demo | API 打标 + 抽检 + CSV/Excel | 1,000-8,000 RMB |
+| V1 | API + 人工复核 + 入库 + 审计 | 1万-5万 RMB |
+| V2 | V1 + 相似款检索 + 预测 shadow 实验 | 3万-8万 RMB |
+
+不建议当前直接训练视觉模型，原因是样本量和标签体系都不够稳定。详细成本调研见：
+
+`reports/current/client_meeting_20260618_multimodal_cost_research.md`
